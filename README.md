@@ -1,6 +1,5 @@
 # PAVE-User-Interface
 
-## Getting Started
 ### 1. Copy the Repository URL
 https://github.com/karenzhang0701/PAVE-User-Interface.git
 
