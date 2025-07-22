@@ -22,6 +22,7 @@ https://github.com/karenzhang0701/PAVE-User-Interface.git
 ```bash
 npm install
 npm start
+```
 
 ---
 
