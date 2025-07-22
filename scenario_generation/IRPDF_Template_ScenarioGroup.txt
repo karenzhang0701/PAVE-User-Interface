@@ -1,0 +1,105 @@
+#BeginCurve
+CurveName	FX_JPY.USD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	TKB+NYB
+Interpolation	Log-Linear
+BaseCurrency	JPY
+BoughtCurrency	USD
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	1d	151.5503
+Spot	2d	151.51829
+Spot	Spot	151.4
+Forward	S/N	151.37647
+Forward	1w	151.2386
+Forward	2w	151.07815
+Forward	3w	150.9175
+Forward	1m	150.7093
+Forward	2m	149.95465
+Forward	3m	149.32245
+Forward	4m	148.6435
+Forward	5m	147.93915
+Forward	6m	147.3475
+Forward	9m	145.34045
+Forward	1y	143.77795
+Forward	15m	142.2198
+Forward	18m	140.7696
+Forward	2y	138.0391
+Forward	3y	132.8634
+Forward	4y	128.14295
+Forward	5y	123.79115
+Forward	6y	119.775
+Forward	7y	115.9
+Forward	8y	112.27
+Forward	9y	108.91
+Forward	10y	105.61
+Forward	15y	93.869726
+Forward	20y	84.641618
+Forward	25y	78.552001
+Forward	30y	74.150523
+
+#EndCurve
+
+#BeginCurve
+CurveName	FX_USD.AUD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	SYB+NYB
+Interpolation	Log-linear
+BaseCurrency	USD
+BoughtCurrency	AUD
+
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	1d	0
+Spot	2d	0
+Spot	Spot	0
+Forward	S/N	0
+Forward	1w	0
+Forward	2w	0
+Forward	3w	0
+Forward	1m	0
+Forward	2m	0
+Forward	3m	0
+Forward	4m	0
+Forward	5m	0
+Forward	6m	0
+Forward	7m	0
+Forward	8m	0
+Forward	9m	0
+Forward	10m	0
+Forward	11m	0
+Forward	1y	0
+Forward	15m	0
+Forward	18m	0
+Forward	21m	0
+Forward	2y	0
+Forward	3y	0
+Forward	4y	0
+Forward	5y	0
+Forward	6y	0
+Forward	7y	0
+Forward	8y	0
+Forward	9y	0
+Forward	10y	0
+Forward	15y	0
+Forward	20y	0
+Forward	25y	0
+Forward	30y	0
+
+#EndCurve

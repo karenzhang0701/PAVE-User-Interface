@@ -1,0 +1,79 @@
+
+#FileDescription 
+Parameter Group: Managerial_ALM_QIS_PA_VCQ_CCQ_PCQ
+ReportDate: 2024-03-29
+ValuationDate: 2024-03-29
+DiscountCurveDate: 2024-03-29
+ProjectionCurveDate: 2024-03-29
+Discount Curve Default Multiplier: 
+Discount Curve Expense Multiplier: 
+Discount Curve Group: 
+
+#BeginCurve
+CurveName	Treasury_USD
+
+
+///:Parameter
+Name	Value
+CurveCategory	BEY
+CurveDate	2024-03-29
+CurveType	RiskFree
+DaycountCode	30/360
+RefCurveName	Treasury_USD
+RefCurveInstanceDate	2024-03-29
+SettlementDays	0
+ 
+///:InstMetadata
+PayFreq	2
+
+///:CurveDefinition
+SecType	Tenor	Rate	MktSpread	CustomizedSpread
+-------	-----	----	---------	----------------
+BEY	3m	0.05370894	0	0
+BEY	6m	0.05323273	0	0
+BEY	1y	0.05020525	0	0
+BEY	2y	0.04624275	0	0
+BEY	3y	0.04406886	0	0
+BEY	5y	0.04214143	0	0
+BEY	7y	0.04209538	0	0
+BEY	10y	0.0420413	0	0
+BEY	20y	0.0445186	0	0
+BEY	30y	0.04342385	0	0
+BEY	100y	0.04342385	0	0
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	USD_Public_BB
+
+///:Parameter
+Name	Value
+CurveCategory	BEY
+CurveDate	2024-03-29
+CurveType	CreditSpread
+DaycountCode	30/360
+RefCurveName	USD_Public_BB
+RefCurveInstanceDate	2024-03-29
+SettlementDays	0
+
+ 
+///:InstMetadata
+PayFreq	2
+
+///:CurveDefinition
+SecType	Tenor	Rate	MktSpread	CustomizedSpread
+-------	-----	----	---------	----------------
+BEY	3m	0.05370894	104.9872	0
+BEY	6m	0.05323273	104.9872	0
+BEY	1y	0.05020525	104.9872	0
+BEY	2y	0.04624275	126.3467	0
+BEY	3y	0.04406886	144.2844	0
+BEY	5y	0.04214143	171.0138	0
+BEY	7y	0.04209538	187.4144	0
+BEY	10y	0.0420413	197.5463	0
+BEY	20y	0.0445186	197.5463	0
+BEY	30y	0.04342385	197.5463	0
+BEY	100y	0.04342385	197.5463	0
+
+#EndCurve

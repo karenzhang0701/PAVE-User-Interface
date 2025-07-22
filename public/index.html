@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PAVE</title>
+    <link rel="icon" href="../images/manulife_logo.jpg" type="image/jpeg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #16a34a;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            row-gap: 60px;
+            column-gap: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            grid-auto-rows: 1fr;
+        }
+
+        .card {
+            background-color: #16a34a;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+
+        .card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .card a.button {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: white;
+            color: #16a34a;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            width: 70%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card a.button:hover {
+            background-color: #e6e6e6;
+        }
+
+        .card .guide-link {
+            font-weight: bold;
+            color: white;
+            text-decoration: underline;
+            font-size: 18px;
+        }
+
+        @media (max-width: 900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Portfolio Analytical Valuation Engine (PAVE)</h1>
+
+    <div class="grid">
+        <!-- Curve Manager -->
+        <div class="card">
+            <img src="/images/curvemanager.png" alt="Curve Manager Preview" />
+            <a href="/curvemanager" class="button">Curve Manager</a>
+            <a href="/userguides/PAVE Curve Manager User Guide.pdf" target="_blank" class="guide-link">User Guide</a>
+        </div>
+
+        <!-- Shock Scenarios -->
+        <div class="card">
+            <img src="/images/scenariogeneration.png" alt="Shock Scenarios Preview" />
+            <a href="/scenariogeneration" class="button">Scenario Generation</a>
+            <a href="/userguides/PAVE Scenario Generation User Guide.pdf" target="_blank" class="guide-link">User
+                Guide</a>
+        </div>
+    </div>
+</body>
+
+</html>

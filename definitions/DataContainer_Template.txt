@@ -1,0 +1,505 @@
+#BeginCurve
+CurveName	BOND_PRICES.CAD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	BondSpotCurve
+CurveType	BondSpotCurve
+DaycountCode	CDN Uniform Payment
+SettlementDays	0
+Calendar	TRB
+
+///:CurveMarketQuotes
+Cusip	Price	CouponRate	SecType	DiscountCurve	StartDate	MaturityDate	SettlementDays	PaymentPeriod	Notional	DayCount	DateRoll	Calendar	Issuer	SettleLag	LagDayType
+------	-----	----------	-------	-------------	---------	------------	---------------	-------------	--------	--------	--------	--------	------	---------	----------
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	BOND_PRICES.USD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	BondSpotCurve
+CurveType	BondSpotCurve
+DaycountCode	Act/Act Bond Unadjusted
+SettlementDays	1
+Calendar	NYB
+
+///:CurveMarketQuotes
+Cusip	Price	CouponRate	SecType	DiscountCurve	StartDate	MaturityDate	SettlementDays	PaymentPeriod	Notional	DayCount	DateRoll	Calendar	Issuer	SettleLag	LagDayType
+------	-----	----------	-------	-------------	---------	------------	---------------	-------------	--------	--------	--------	--------	------	---------	----------
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	BOND_PRICES.JPY
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	BondSpotCurve
+CurveType	BondSpotCurve
+DaycountCode	Act/365 Fixed
+SettlementDays	0
+Calendar	TKB
+
+///:CurveMarketQuotes
+Cusip	Price	CouponRate	SecType	DiscountCurve	StartDate	MaturityDate	SettlementDays	PaymentPeriod	Notional	DayCount	DateRoll	Calendar	Issuer	SettleLag	LagDayType
+------	-----	----------	-------	-------------	---------	------------	---------------	-------------	--------	--------	--------	--------	------	---------	----------
+
+#EndCurve
+
+#BeginCurve
+CurveName	MarketPX.USD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	SpotPriceCurve
+CurveType	SpotPriceCurve
+SettlementDays	1
+DaycountCode	ACT/360
+
+///:CurveMarketQuotes
+Ticker	Price	Yield
+------	-----	-----
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	MarketPX.CAD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	SpotPriceCurve
+CurveType	SpotPriceCurve
+SettlementDays	2
+DaycountCode	Act/365 Fixed
+
+///:CurveMarketQuotes
+Ticker	Price	Yield
+------	-----	-----
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	MarketPX.JPY
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	SpotPriceCurve
+CurveType	SpotPriceCurve
+SettlementDays	2
+DaycountCode	ACT/360
+
+///:CurveMarketQuotes
+Ticker	Price	Yield
+------	-----	-----
+
+#EndCurve
+
+
+
+#BeginCurve
+CurveName	MFCPRIndx.CAD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	ForwardPriceCurve
+CurveType	ForwardPrice
+SettlementDays	2
+Calendar	TRB
+DaycountCode	Act/365 Fixed
+
+///:CurveMarketQuotes
+Tenor	Price
+-----	-----
+Spot	17.080000
+3m	17.104800
+6m	17.127586
+9m	17.150223
+1y	17.171841
+2y	17.270856
+3y	17.395701
+4y	17.546767
+5y	17.715924
+
+#EndCurve
+
+#BeginCurve
+CurveName	IBOXUSHY.USD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	ForwardPriceCurve
+CurveType	ForwardPrice
+SettlementDays	1C
+Calendar	NYB
+DaycountCode	ACT/360
+
+///:CurveMarketQuotes
+Tenor	Price
+-----	-----
+Spot	278.982400
+1J	284.967450
+2J	285.194638
+3J	285.394377
+4J	285.593182
+5J	285.593182
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	FX_CAD.USD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	TRB+NYB
+Interpolation	Log-Linear
+BaseCurrency	CAD
+BoughtCurrency	USD
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	O/N	1.25067500
+Spot	Spot	1.25065000
+Spot	T/N	1.25062700
+Forward	1w	1.25047800
+Forward	1m	1.25004000
+Forward	2m	1.24965000
+Forward	3m	1.24926500
+Forward	6m	1.24824000
+Forward	9m	1.24744300
+Forward	1y	1.24675300
+Forward	2y	1.24467700
+Forward	3y	1.24470000
+Forward	4y	1.24395000
+Forward	5y	1.24435000
+Forward	6y	1.24520000
+Forward	7y	1.24285000
+Forward	8y	1.24625000
+Forward	9y	1.23225000
+Forward	10y	1.24665000
+Forward	12y	1.25297968
+Forward	15y	1.25984228
+
+#EndCurve
+
+#BeginCurve
+CurveName	FX_JPY.USD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	TKB+NYB
+Interpolation	Log-Linear
+BaseCurrency	JPY
+BoughtCurrency	USD
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	1d	151.5503
+Spot	2d	151.51829
+Spot	Spot	151.4
+Forward	S/N	151.37647
+Forward	1w	151.2386
+Forward	2w	151.07815
+Forward	3w	150.9175
+Forward	1m	150.7093
+Forward	2m	149.95465
+Forward	3m	149.32245
+Forward	4m	148.6435
+Forward	5m	147.93915
+Forward	6m	147.3475
+Forward	9m	145.34045
+Forward	1y	143.77795
+Forward	15m	142.2198
+Forward	18m	140.7696
+Forward	2y	138.0391
+Forward	3y	132.8634
+Forward	4y	128.14295
+Forward	5y	123.79115
+Forward	6y	119.775
+Forward	7y	115.9
+Forward	8y	112.27
+Forward	9y	108.91
+Forward	10y	105.61
+Forward	15y	93.869726
+Forward	20y	84.641618
+Forward	25y	78.552001
+Forward	30y	74.150523
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	FX_SGD.USD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	SIB+NYB
+Interpolation	Log-linear
+BaseCurrency	SGD
+BoughtCurrency	USD
+
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	1d	0
+Spot	2d	0
+Spot	Spot	0
+Forward	S/N	0
+Forward	1w	0
+Forward	2w	0
+Forward	3w	0
+Forward	1m	0
+Forward	2m	0
+Forward	3m	0
+Forward	4m	0
+Forward	5m	0
+Forward	6m	0
+Forward	9m	0
+Forward	1y	0
+
+#EndCurve
+
+
+#BeginCurve
+CurveName	FX_USD.AUD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	SYB+NYB
+Interpolation	Log-linear
+BaseCurrency	USD
+BoughtCurrency	AUD
+
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	1d	0
+Spot	2d	0
+Spot	Spot	0
+Forward	S/N	0
+Forward	1w	0
+Forward	2w	0
+Forward	3w	0
+Forward	1m	0
+Forward	2m	0
+Forward	3m	0
+Forward	4m	0
+Forward	5m	0
+Forward	6m	0
+Forward	7m	0
+Forward	8m	0
+Forward	9m	0
+Forward	10m	0
+Forward	11m	0
+Forward	1y	0
+Forward	15m	0
+Forward	18m	0
+Forward	21m	0
+Forward	2y	0
+Forward	3y	0
+Forward	4y	0
+Forward	5y	0
+Forward	6y	0
+Forward	7y	0
+Forward	8y	0
+Forward	9y	0
+Forward	10y	0
+Forward	15y	0
+Forward	20y	0
+Forward	25y	0
+Forward	30y	0
+
+#EndCurve
+
+#BeginCurve
+CurveName	FX_USD.EUR
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	NYB+TGT
+Interpolation	Log-linear
+BaseCurrency	USD
+BoughtCurrency	EUR
+
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	O/N	0
+Spot	T/N	0
+Spot	Spot	0
+Forward	S/N	0
+Forward	1w	0
+Forward	2w	0
+Forward	3w	0
+Forward	1m	0
+Forward	2m	0
+Forward	3m	0
+Forward	4m	0
+Forward	5m	0
+Forward	6m	0
+Forward	7m	0
+Forward	8m	0
+Forward	9m	0
+Forward	10m	0
+Forward	11m	0
+Forward	1y	0
+Forward	15m	0
+Forward	18m	0
+Forward	21m	0
+Forward	2y	0
+Forward	3y	0
+Forward	4y	0
+Forward	5y	0
+Forward	6y	0
+Forward	7y	0
+Forward	8y	0
+Forward	9y	0
+Forward	10y	0
+
+#EndCurve
+
+#BeginCurve
+CurveName	FX_USD.GBP
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	LNB+NYB
+Interpolation	Log-linear
+BaseCurrency	USD
+BoughtCurrency	GBP
+
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	O/N	0
+Spot	T/N	0
+Spot	Spot	0
+Forward	S/N	0
+Forward	1w	0
+Forward	2w	0
+Forward	3w	0
+Forward	1m	0
+Forward	2m	0
+Forward	3m	0
+Forward	4m	0
+Forward	5m	0
+Forward	6m	0
+Forward	7m	0
+Forward	8m	0
+Forward	9m	0
+Forward	10m	0
+Forward	11m	0
+Forward	1y	0
+Forward	15m	0
+Forward	18m	0
+Forward	21m	0
+Forward	2y	0
+Forward	3y	0
+Forward	4y	0
+Forward	5y	0
+Forward	6y	0
+Forward	7y	0
+Forward	8y	0
+Forward	9y	0
+Forward	10y	0
+
+#EndCurve
+
+#BeginCurve
+CurveName	FX_USD.NZD
+
+///:Parameter
+Name	Value
+CurveDate	2024-03-29
+RefCurveInstanceDate	2024-03-29
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	NYB+WEB
+Interpolation	Log-linear
+BaseCurrency	USD
+BoughtCurrency	NZD
+
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+-------	-----	----
+Spot	1d	0
+Spot	2d	0
+Spot	Spot	0
+Forward	S/N	0
+Forward	1w	0
+Forward	2w	0
+Forward	3w	0
+Forward	1m	0
+Forward	2m	0
+Forward	3m	0
+Forward	4m	0
+Forward	5m	0
+Forward	6m	0
+Forward	9m	0
+Forward	1y	0
+Forward	15m	0
+Forward	18m	0
+Forward	2y	0
+Forward	3y	0
+Forward	4y	0
+Forward	5y	0
+Forward	6y	0
+Forward	7y	0
+Forward	8y	0
+Forward	9y	0
+
+#EndCurve

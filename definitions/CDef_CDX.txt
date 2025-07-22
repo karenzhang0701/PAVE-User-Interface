@@ -1,0 +1,431 @@
+#BeginCurve	TONAR.JPY
+CurveName	TONAR.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	YieldCurve
+ParentIndices	TONAR.JPY
+CrvLevelDaycountCode	Act/365 Fixed
+SettlementDays	2
+Calendar	TKB
+
+
+///:CurveDefinition
+SecType	Tenor	PriorityLevel	LegType	ProjectionCurve	BootstrappingDiscountCurve	LegId	Notional	IndexTenor	DaycountCode	ResetFreqDays	PayFreqDays	CompFreqDays	RollConvention
+-------	-----	-------------	-------	---------------	--------------------------	-----	--------	----------	------------	-------------	-----------	------------	--------------
+ON	1d	Six	Fix	n/a	TONAR.JPY	input	1,000,000.00	n/a	Act/365 Fixed	n/a	1	n/a	Normal - EOM
+TN	2d	Six	Fix	n/a	TONAR.JPY	input	1,000,000.00	n/a	Act/365 Fixed	n/a	1	n/a	Normal - EOM
+Swap	1w	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2w	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3w	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	11m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	15m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	18m	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	11y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	12y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	15y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	20y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	25y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	30y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	35y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	40y	Eight (lowest)	Fix:Float	n/a:TONAR.JPY	TONAR.JPY:TONAR.JPY	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+
+#EndCurve	TONAR.JPY
+
+#BeginCurve  SOFR.USD
+CurveName	SOFR.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	YieldCurve
+ParentIndices	SOFR.USD
+CrvLevelDaycountCode	Act/360
+SettlementDays	2
+Calendar	BMA
+
+
+///:CurveDefinition
+SecType	Tenor	PriorityLevel	LegType	ProjectionCurve	BootstrappingDiscountCurve	LegId	Notional	IndexTenor	DaycountCode	ResetFreqDays	PayFreqDays	CompFreqDays	RollConvention
+-------	-----	-------------	-------	---------------	--------------------------	-----	--------	----------	------------	-------------	-----------	------------	--------------
+ON	1d	Six	Fix	n/a	SOFR.USD	input	1,000,000.00	n/a	Act/360	n/a	1	n/a	Normal - No EOM	
+TN	2d	Six	Fix	n/a	SOFR.USD	input	1,000,000.00	n/a	Act/360	n/a	1	n/a	Normal - No EOM	
+Swap	1w	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2w	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3w	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	11m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	18m	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	12y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	15y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	20y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	25y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	30y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	40y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	50y	Eight (lowest)	Fix:Float	n/a:SOFR.USD	SOFR.USD:SOFR.USD	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+
+#EndCurve	SOFR.USD
+
+#BeginCurve  ESTR.EUR
+CurveName	ESTR.EUR
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	YieldCurve
+ParentIndices	ESTR.EUR
+CrvLevelDaycountCode	Act/360
+SettlementDays	2
+Calendar	TGT
+
+
+///:CurveDefinition
+SecType	Tenor	PriorityLevel	LegType	ProjectionCurve	BootstrappingDiscountCurve	LegId	Notional	IndexTenor	DaycountCode	ResetFreqDays	PayFreqDays	CompFreqDays	RollConvention
+-------	-----	-------------	-------	---------------	--------------------------	-----	--------	----------	------------	-------------	-----------	------------	--------------
+ON	1d	Six	Fix	n/a	ESTR.EUR	input	1,000,000.00	n/a	Act/360	n/a	1	n/a	Normal - EOM	
+TN	2d	Six	Fix	n/a	ESTR.EUR	input	1,000,000.00	n/a	Act/360	n/a	1	n/a	Normal - EOM	
+Swap	1w	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2w	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	11m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	18m	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	11y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	12y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	15y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	20y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	25y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	30y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	40y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	50y	Eight (lowest)	Fix:Float	n/a:ESTR.EUR	ESTR.EUR:ESTR.EUR	input:0	1,000,000.00:1,000,000.00	n/a:1	Act/360:Act/360	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+
+#EndCurve	ESTR.EUR
+
+#BeginCurve  Surv_ITRX.JAPAN.5Y.JPY
+CurveName	Surv_ITRX.JAPAN.5Y.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_ITRX.JAPAN.5Y.JPY:TONAR.JPY
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+TGT
+LegType	Premium:Protection
+BootstrappingDiscountCurve	TONAR.JPY:TONAR.JPY
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays	90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_ITRX.JAPAN.5Y.JPY
+
+#BeginCurve	Surv_CDX.EM.5Y.USD
+CurveName	Surv_CDX.EM.5Y.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_CDX.EM.5Y.USD:SOFR.USD
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+NYB
+LegType	Premium:Protection
+BootstrappingDiscountCurve	SOFR.USD:SOFR.USD
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_CDX.EM.5Y.USD
+
+#BeginCurve	Surv_CDX.NA.HY.5Y.USD
+CurveName	Surv_CDX.NA.HY.5Y.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_CDX.NA.HY.5Y.USD:SOFR.USD
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+NYB
+LegType	Premium:Protection
+BootstrappingDiscountCurve	SOFR.USD:SOFR.USD
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_CDX.NA.HY.5Y.USD
+
+#BeginCurve	Surv_CDX.NA.IG.5Y.USD
+CurveName	Surv_CDX.NA.IG.5Y.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_CDX.NA.IG.5Y.USD:SOFR.USD
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+NYB
+LegType	Premium:Protection
+BootstrappingDiscountCurve	SOFR.USD:SOFR.USD
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_CDX.NA.IG.5Y.USD
+
+#BeginCurve	Surv_ITRX.ASIAXJ.IG.5Y.USD
+CurveName	Surv_ITRX.ASIAXJ.IG.5Y.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_ITRX.ASIAXJ.IG.5Y.USD:SOFR.USD
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+TGT
+LegType	Premium:Protection
+BootstrappingDiscountCurve	SOFR.USD:SOFR.USD
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_ITRX.ASIAXJ.IG.5Y.USD
+
+#BeginCurve	Surv_ITRX.EUR.SNR.FIN.5Y.EUR
+CurveName	Surv_ITRX.EUR.SNR.FIN.5Y.EUR
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_ITRX.EUR.SNR.FIN.5Y.EUR:ESTR.EUR
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+TGT
+LegType	Premium:Protection
+BootstrappingDiscountCurve	ESTR.EUR:ESTR.EUR
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_ITRX.EUR.SNR.FIN.5Y.EUR
+
+#BeginCurve	Surv_ITRX.EUR.SUB.FIN.5Y.EUR
+CurveName	Surv_ITRX.EUR.SUB.FIN.5Y.EUR
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_ITRX.EUR.SUB.FIN.5Y.EUR:ESTR.EUR
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+TGT
+LegType	Premium:Protection
+BootstrappingDiscountCurve	ESTR.EUR:ESTR.EUR
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_ITRX.EUR.SUB.FIN.5Y.EUR
+
+#BeginCurve	Surv_ITRX.EUR.XOVER.5Y.EUR
+CurveName	Surv_ITRX.EUR.XOVER.5Y.EUR
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_ITRX.EUR.XOVER.5Y.EUR:ESTR.EUR
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+TGT
+LegType	Premium:Protection
+BootstrappingDiscountCurve	ESTR.EUR:ESTR.EUR
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_ITRX.EUR.XOVER.5Y.EUR
+
+#BeginCurve	Surv_ITRX.EUROPE.5Y.EUR
+CurveName	Surv_ITRX.EUROPE.5Y.EUR
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_ITRX.EUROPE.5Y.EUR:ESTR.EUR
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	LNB+TGT
+LegType	Premium:Protection
+BootstrappingDiscountCurve	ESTR.EUR:ESTR.EUR
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+
+#EndCurve	Surv_ITRX.EUROPE.5Y.EUR
+
+#BeginCurve	Surv_CDX.NA.HY_2I65BRAD3.USD
+CurveName	Surv_CDX.NA.HY_2I65BRAD3.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_CDX.NA.HY_2I65BRAD3.USD:SOFR.USD
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	NYB
+LegType	Premium:Protection
+BootstrappingDiscountCurve	SOFR.USD:SOFR.USD
+LegId	input:0
+Notional	1,000,000.00:1,000,000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays		90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	5y
+CDS	6y
+
+#EndCurve	Surv_CDX.NA.HY_2I65BRAD3.USD

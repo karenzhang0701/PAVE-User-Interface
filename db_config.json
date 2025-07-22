@@ -1,0 +1,8 @@
+{
+    "Database_info":{
+        "driver":"ODBC Driver 17 for SQL Server",
+        "server_name1":"azsqlmirmdbuatcac.ecac0ea6f728.database.windows.net",
+        "server_name":"AZWDBPCACSQL05\\GWAMSQL16P02",
+        "database_name":"RMDB"
+    }
+}

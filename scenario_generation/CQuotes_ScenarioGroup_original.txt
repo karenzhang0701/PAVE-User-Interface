@@ -1,0 +1,160 @@
+#FileDescription
+Generated: Python code
+Database: AZWDBPCACSQL05\GWAMSQL16P02.RMDB
+ReportDate: 2025-03-31
+
+
+#BeginCurve
+CurveName	TONAR.ASIA.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+ON	1d	0.00477	NULL
+TN	2d	0.00477	NULL
+Swap	1w	0.004775	NULL
+Swap	2w	0.0047875	NULL
+Swap	3w	0.0047875	NULL
+Swap	1m	0.004775	NULL
+Swap	2m	0.0050375	NULL
+Swap	3m	0.00525	NULL
+Swap	4m	0.0055125	NULL
+Swap	5m	0.00575	NULL
+Swap	6m	0.0059375	NULL
+Swap	7m	0.006125	NULL
+Swap	8m	0.0063	NULL
+Swap	9m	0.006475	NULL
+Swap	10m	0.0066625	NULL
+Swap	11m	0.0068	NULL
+Swap	1y	0.00695	NULL
+Swap	15m	0.0074125	NULL
+Swap	18m	0.0078	NULL
+Swap	2y	0.0084375	NULL
+Swap	3y	0.0093375	NULL
+Swap	4y	0.0099125	NULL
+Swap	5y	0.0103875	NULL
+Swap	6y	0.01085	NULL
+Swap	7y	0.0113625	NULL
+Swap	8y	0.0118875	NULL
+Swap	9y	0.0124375	NULL
+Swap	10y	0.0130125	NULL
+Swap	11y	0.0135625	NULL
+Swap	12y	0.0141	NULL
+Swap	15y	0.015675	NULL
+Swap	20y	0.0178125	NULL
+Swap	25y	0.0189625	NULL
+Swap	30y	0.0195625	NULL
+Swap	35y	0.0199375	NULL
+Swap	40y	0.02015	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	SOFR.ASIA.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+ON	1d	0.0436	NULL
+TN	2d	0.0436	NULL
+Swap	1w	0.0431774	NULL
+Swap	2w	0.0431657	NULL
+Swap	3w	0.0431687	NULL
+Swap	1m	0.043201	NULL
+Swap	2m	0.04303765	NULL
+Swap	3m	0.04278605	NULL
+Swap	4m	0.042384	NULL
+Swap	5m	0.0419584	NULL
+Swap	6m	0.041562	NULL
+Swap	7m	0.0411265	NULL
+Swap	8m	0.040747	NULL
+Swap	9m	0.04035425	NULL
+Swap	10m	0.04	NULL
+Swap	11m	0.0396995	NULL
+Swap	1y	0.0394	NULL
+Swap	18m	0.03762825	NULL
+Swap	2y	0.0368025	NULL
+Swap	3y	0.03605	NULL
+Swap	4y	0.035948	NULL
+Swap	5y	0.036072	NULL
+Swap	6y	0.0363175	NULL
+Swap	7y	0.036584	NULL
+Swap	8y	0.036841	NULL
+Swap	9y	0.037099	NULL
+Swap	10y	0.037359	NULL
+Swap	12y	0.0378693	NULL
+Swap	15y	0.038467	NULL
+Swap	20y	0.038797	NULL
+Swap	25y	0.038418	NULL
+Swap	30y	0.0377675	NULL
+Swap	40y	0.036062	NULL
+Swap	50y	0.034418	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_Honda_SNRFOR_CR14_100bp.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+RecoveryRate	0.35
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.00110412	NULL
+CDS	1y	0.00127196	NULL
+CDS	2y	0.0022861	NULL
+CDS	3y	0.00342108	NULL
+CDS	4y	0.00459928	NULL
+CDS	5y	0.00565	NULL
+CDS	7y	0.0067807	NULL
+CDS	10y	0.00731564	NULL
+CDS	15y	0.00760013	NULL
+CDS	20y	0.00778646	NULL
+CDS	30y	0.00821284	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_Islam_SNRFOR_CR14_100bp.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+RecoveryRate	0.225
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.05800593	NULL
+CDS	1y	0.0595529	NULL
+CDS	2y	0.06212496	NULL
+CDS	3y	0.06342381	NULL
+CDS	4y	0.06494663	NULL
+CDS	5y	0.066715	NULL
+CDS	7y	2.70373944	NULL
+CDS	10y	2.88658787	NULL
+CDS	15y	1.54193898	NULL
+CDS	20y	1.75914225	NULL
+CDS	30y	0.90188557	NULL
+
+#EndCurve
+

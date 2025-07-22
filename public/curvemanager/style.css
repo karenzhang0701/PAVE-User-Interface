@@ -1,0 +1,183 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  display: flex;
+  min-height: 100vh; /* Ensures full viewport height */
+  font-family: sans-serif;
+}
+
+#sidebar {
+  width: 550px;
+  background: #f4f4f4;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  box-sizing: border-box;
+  overflow-y: auto; /* Allows scrolling if content overflows */
+  overscroll-behavior: contain;
+}
+
+#main {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto; /* Allows scrolling if content overflows */
+}
+
+/* Curve list items */
+.curve-item {
+  margin-bottom: 0.5rem;
+  /* border-bottom: 1px solid #ddd; */
+  padding-bottom: 0.5rem;
+}
+
+/* Code blocks */
+pre {
+  background: #eee;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+/* Curve relationship tree */
+.relationship-tree {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0;
+}
+
+.relationship-children {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Parent curve box */
+.parent-box {
+  border: 1px solid #333;
+  padding: 8px 12px;
+  background: #e0f7fa;
+  border-radius: 6px;
+  font-weight: bold;
+  text-align: center;
+  width: 140px;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Arrow between parent and child */
+.up-arrow {
+  font-size: 20px;
+  margin: 4px 0;
+}
+
+/* Curve content spacing */
+#curveContent > div {
+  margin: 0;
+  padding: 0;
+}
+
+.important-button {
+  /* box-shadow: 0 0 2px 0.5px rgba(0, 128, 0, 0.25); */
+  border: 1px solid #337835;
+  background-color: #f4fff4;
+  font-weight: bold;
+  /* transition: box-shadow 0.2s ease; */
+}
+
+.important-button:hover {
+  box-shadow: 0 0 6px 2px rgba(0, 128, 0, 0.35);
+  background-color: #eaffea;
+}
+
+#curveSelect option {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.quote-heading {
+  font-size: 1rem; /* text-base */
+  font-weight: 700; /* font-bold */
+  color: #090909;   /* text-gray-700 */
+  margin-bottom: 0.5rem; /* mb-2 */
+  display: block;
+}
+
+.green-button {
+  background-color: #16a34a; /* Tailwind green-600 */
+  color: white;
+  font-size: 0.875rem; /* text-sm */
+  padding: 0.375rem 1rem; /* vertical: 6px, horizontal: 16px */
+  border-radius: 0.375rem; /* rounded */
+  text-align: center;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.green-button:hover {
+  background-color: #15803d; /* Tailwind green-700 */
+}
+
+.white-button {
+  background-color: white; /* Tailwind green-600 */
+  color: #16a34a;
+  font-weight: bold;
+  font-size: 0.875rem; /* text-sm */
+  padding: 0.325rem 0.85rem; /* vertical: 6px, horizontal: 16px */
+  border-radius: 0.375rem; /* rounded */
+  text-align: center;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.white-button:hover {
+  background-color: rgb(237, 237, 237);
+}
+
+.blue-button {
+  padding: 0.375rem 0.75rem; /* py-1.5 px-3 */
+  background-color: #2563eb; /* bg-blue-600 */
+  color: white;              /* text-white */
+  font-size: 0.875rem;       /* text-sm */
+  border-radius: 0.375rem;   /* rounded-md */
+  transition: background-color 0.2s ease;
+}
+
+.blue-button:hover {
+  background-color: #1d4ed8; /* hover:bg-blue-700 */
+}
+
+.gray-button {
+  /* mt-2 */
+  flex: 1;
+  width: auto;
+  /* w-full */
+  background-color: #d1d5db;
+  /* bg-gray-300 */
+  padding: 0.375rem 1rem;
+  color: #374151;
+  /* text-gray-700 */
+  font-size: 0.875rem;
+  /* text-sm */
+  padding-top: 0.375rem;
+  /* py-1.5 */
+  padding-bottom: 0.375rem;
+  border-radius: 0.375rem;
+  /* rounded */
+  transition: background-color 0.2s ease;
+}
+
+.gray-button:hover {
+  background-color: #9ca3af;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

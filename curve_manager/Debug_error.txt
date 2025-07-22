@@ -1,0 +1,10 @@
+ERROR! FAILURE: ERROR in CurveMgr::CurveMetadataFileInput - ENSURE unmet: Failed to open the input file: .\CDef_IRPDF_JPYAUD.txt
+
+ERROR! FAILURE: ERROR in CurveMgr::InputCurveDefs - FAILURE: No curves are found in the curve definition file, please check -cdf option.
+
+ERROR! FAILURE: Need valuation date (-vd)
+
+ERROR! FAILURE: ERROR in CurveMgr::InputCurveDefs - FAILURE: Empty file - .\CQuotes_CurveManager.txt
+
+ERROR! FAILURE: ERROR in CurveMgr::InputCurveDefs - FAILURE: Empty file - .\CQuotes_CurveManager.txt
+
