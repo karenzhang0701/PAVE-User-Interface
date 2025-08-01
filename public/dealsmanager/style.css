@@ -1,4 +1,5 @@
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -7,35 +8,44 @@ html, body {
 
 body {
   display: flex;
-  min-height: 100vh; /* Ensures full viewport height */
+  min-height: 100vh;
+  /* Ensures full viewport height */
   font-family: sans-serif;
 }
 
 #sidebar {
-  width: 550px;
+  width: 450px;
   background: #f4f4f4;
   padding: 1rem;
   border-right: 1px solid #ccc;
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
+  /* Full viewport height */
   box-sizing: border-box;
-  overflow-y: auto; /* Allows scrolling if content overflows */
-  overscroll-behavior: contain;
+  overflow-y: auto;
+  /* Allows scrolling if content overflows */
 }
 
 #main {
   flex: 1;
   padding: 1rem;
-  overflow-y: auto; /* Allows scrolling if content overflows */
+  overflow-y: auto;
+  /* Allows scrolling if content overflows */
 }
 
 /* Curve list items */
 .curve-item {
-  margin-bottom: 0.5rem;
-  /* border-bottom: 1px solid #ddd; */
+  margin-bottom: 2px;
+  border-bottom: none;
   padding-bottom: 0.5rem;
 }
+
+#curveSubsetSelect option {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
 
 /* Code blocks */
 pre {
@@ -77,10 +87,21 @@ pre {
   margin: 4px 0;
 }
 
+#curveContent {
+  flex-grow: 1;
+  overflow-x: auto;
+  padding: 1rem;
+}
+
 /* Curve content spacing */
-#curveContent > div {
+#curveContent>div {
   margin: 0;
   padding: 0;
+}
+
+.label-group {
+  margin-right: 20px;
+  margin-bottom: 15px;
 }
 
 .important-button {
@@ -96,32 +117,109 @@ pre {
   background-color: #eaffea;
 }
 
-#curveSelect option {
-  padding-top: 4px;
-  padding-bottom: 4px;
-}
-
 .quote-heading {
-  font-size: 1rem; /* text-base */
-  font-weight: 700; /* font-bold */
-  color: #090909;   /* text-gray-700 */
-  margin-bottom: 0.5rem; /* mb-2 */
+  font-size: 1rem;
+  /* text-base */
+  font-weight: 700;
+  /* font-bold */
+  color: #090909;
+  /* text-gray-700 */
+  margin-bottom: 0.5rem;
+  /* mb-2 */
   display: block;
 }
 
+.output-heading {
+  font-size: 1.2rem;
+  /* text-base */
+  font-weight: 700;
+  /* font-bold */
+  color: #090909;
+  /* text-gray-700 */
+  /* mb-2 */
+  display: block;
+}
+
+.heading-xl {
+  font-size: 1.25rem;
+  /* text-xl */
+  font-weight: 600;
+  /* font-semibold */
+  color: #1f2937;
+  /* text-gray-800 */
+}
+
 .green-button {
-  background-color: #16a34a; /* Tailwind green-600 */
+  background-color: #16a34a;
+  /* Tailwind green-600 */
   color: white;
-  font-size: 0.875rem; /* text-sm */
-  padding: 0.375rem 1rem; /* vertical: 6px, horizontal: 16px */
-  border-radius: 0.375rem; /* rounded */
+  font-size: 0.875rem;
+  /* text-sm */
+  padding: 0.375rem 1rem;
+  /* vertical: 6px, horizontal: 16px */
+  border-radius: 0.375rem;
+  /* rounded */
   text-align: center;
   display: inline-block;
   transition: background-color 0.2s ease;
 }
 
 .green-button:hover {
-  background-color: #15803d; /* Tailwind green-700 */
+  background-color: #15803d;
+  /* Tailwind green-700 */
+}
+
+.blue-button {
+  padding: 0.375rem 0.75rem;
+  /* py-1.5 px-3 */
+  background-color: #2563eb;
+  /* bg-blue-600 */
+  color: white;
+  /* text-white */
+  font-size: 0.875rem;
+  /* text-sm */
+  border-radius: 0.375rem;
+  /* rounded-md */
+  transition: background-color 0.2s ease;
+}
+
+.blue-button:hover {
+  background-color: #1d4ed8;
+  /* hover:bg-blue-700 */
+}
+
+.small-text {
+  font-size: 0.875rem;
+  /* Tailwind's text-sm */
+  /* Tailwind's gray-600 */
+  margin-bottom: 1rem;
+  /* Tailwind's mb-4 */
+}
+
+.rounded-dropdown {
+  width: auto;
+  background-color: white;
+  padding: 0.25rem 0.5rem;
+  /* px-3 py-2 */
+  font-size: 0.875rem;
+  /* text-sm */
+  font-weight: 300;
+  /* font-semibold */
+  color: #1f2937;
+  /* text-gray-800 */
+  border-radius: 0.375rem;
+  /* rounded-md */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  /* shadow-xs */
+  border: 1px solid #d1d5db;
+  /* ring-1 ring-gray-300 */
+  outline: none;
+  margin-bottom: 0.125rem;
+}
+
+.rounded-dropdown:hover {
+  background-color: #f9fafb;
+  /* hover:bg-gray-50 */
 }
 
 .white-button {
@@ -138,19 +236,6 @@ pre {
 
 .white-button:hover {
   background-color: rgb(237, 237, 237);
-}
-
-.blue-button {
-  padding: 0.375rem 0.75rem; /* py-1.5 px-3 */
-  background-color: #2563eb; /* bg-blue-600 */
-  color: white;              /* text-white */
-  font-size: 0.875rem;       /* text-sm */
-  border-radius: 0.375rem;   /* rounded-md */
-  transition: background-color 0.2s ease;
-}
-
-.blue-button:hover {
-  background-color: #1d4ed8; /* hover:bg-blue-700 */
 }
 
 .gray-button {
@@ -175,9 +260,110 @@ pre {
 
 .gray-button:hover {
   background-color: #9ca3af;
+  /* hover:bg-gray-400 */
 }
 
-pre {
-  white-space: pre-wrap;
-  word-break: break-word;
+.toggle-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-family: sans-serif;
+}
+
+.toggle-switch input {
+  display: none;
+}
+
+.slider {
+  position: relative;
+  width: 50px;
+  height: 24px;
+  background-color: #ccc;
+  border-radius: 34px;
+  transition: background-color 0.3s;
+  margin-right: 10px;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+input:checked+.slider {
+  background-color: #28a745;
+  /* Green when ON */
+}
+
+input:checked+.slider::before {
+  transform: translateX(26px);
+}
+
+.label-text {
+  font-size: 16px;
+}
+
+#scenarioTableWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+#scenarioRowControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 48px;
+  /* aligns with table header */
+}
+
+.scenario-control-row {
+  display: flex;
+  align-items: center;
+}
+
+.fill-inner {
+  align-items: center;
+}
+
+.fill-value-input,
+.fill-row-button {
+  height: 2rem;
+  /* Tailwind's h-9 */
+  display: flex;
+  align-items: center;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+#scenarioTable {
+  table-layout: auto;
+  width: 100%;
+  font-size: 13px;
+}
+
+#scenarioTable th,
+#scenarioTable td {
+  padding: 4px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#scenarioTable input[type="number"],
+#scenarioTable input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 12px;
+  text-align: center;
 }

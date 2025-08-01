@@ -7,7 +7,7 @@ const fs = require('fs');
 const excelPath = path.join(__dirname, '..', 'Deals_DifferentInstruments.xlsx');
 
 // Columns to extract
-const filterFields = ['AssetId', 'Portfolio', 'Currency', 'Instrument', 'DiscountCurve', 'ProjectionCurve'];
+const filterFields = ['Portfolio', 'Currency', 'Instrument', 'DiscountCurve', 'ProjectionCurve'];
 
 // Get unique filter options
 router.get('/filters', (req, res) => {
@@ -16,7 +16,6 @@ router.get('/filters', (req, res) => {
         const sheetNames = workbook.SheetNames;
 
         const filters = {
-            AssetId: new Set(),
             Portfolio: new Set(),
             Currency: new Set(),
             Instrument: new Set(),
@@ -43,10 +42,59 @@ router.get('/filters', (req, res) => {
         }
         console.log(result);
         res.json(result);
-    } catch(error) {
+    } catch (error) {
         console.error('Error reading Excel file:', error);
         res.status(500).json({ error: 'Failed to load filter options' });
     }
 })
+
+function matchesFilters(row, filters) {
+    for (const field of filterFields) {
+        if (filters[field] && filters[field].length > 0) {
+            const rowValue = (row[field] || '').toString().trim();
+            if (!filters[field].includes(rowValue)) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+// POST endpoint to receive selected data and filter Excel sheets
+
+router.post('/send-selected-data', (req, res) => {
+    const { 'Asset Id': assetIds = [], ...selectedFilters } = req.body;
+    console.log('Received data: ', req.body);
+
+    try {
+        const workbook = xlsx.readFile(excelPath);
+        const sheetNames = workbook.SheetNames;
+        const filteredResults = [];
+
+        const instrumentsToSearch = selectedFilters.Instrument?.length > 0
+            ? selectedFilters.Instrument
+            : sheetNames;
+
+        for (const sheetName of instrumentsToSearch) {
+            if (!workbook.Sheets[sheetName]) continue;
+
+            const jsonData = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
+
+            const assetIdFilteredRows = assetIds.length > 0
+                ? jsonData.filter(row => assetIds.includes(row['AssetId']))
+                : jsonData;
+
+            const finalFilteredRows = assetIdFilteredRows.filter(row => matchesFilters(row, selectedFilters));
+            filteredResults.push(...finalFilteredRows);
+        }
+
+        console.log('Filtered results:', filteredResults.length);
+        res.json(filteredResults);
+    } catch (error) {
+        console.error('Error processing Excel file:', error);
+        res.status(500).json({ error: 'Failed to process data' });
+    }
+});
+
 
 module.exports = router;

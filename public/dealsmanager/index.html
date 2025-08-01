@@ -9,19 +9,250 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <script src="https://cdn.jsdelivr.net/npm/decimal.js@10.4.3/decimal.min.js"></script>
+    <style>
+        .dropdown-button::after {
+            content: '\25BC';
+            /* Unicode for down arrow */
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            font-size: 0.75rem;
+            color: #6b7280;
+            /* Tailwind gray-500 */
+        }
+
+        .category {
+            flex: 1;
+            /* Ensures the flex items grow equally */
+            min-width: 200px;
+            /* Minimum width for responsiveness */
+        }
+
+        .relative {
+            position: relative;
+        }
+
+        textarea {
+            resize: vertical;
+            /* Allows the user to resize the textarea vertically */
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-gray-100 font-inter">
+    <div class="container mx-auto mt-10 p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Deals Manager</h3>
+        <div class="flex flex-wrap gap-4">
+            <!-- Asset ID -->
+            <div class="category">
+                <label class="block text-sm font-medium text-gray-700">Asset ID</label>
+                <textarea id="assetIdInput" placeholder="Separate Asset Id by commas"
+                    class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    rows="3"></textarea>
+            </div>
+
+            <!-- Portfolio -->
+            <div class="category">
+                <label class="block text-sm font-medium text-gray-700">Portfolio</label>
+                <div class="relative">
+                    <button onclick="toggleDropdown('portfolioDropdown')"
+                        class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
+                        Select Portfolios
+                    </button>
+                    <div id="portfolioDropdown"
+                        class="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden">
+                        <input type="text" placeholder="Search"
+                            class="w-full p-2 border-b border-gray-300 focus:outline-none"
+                            onkeyup="filterOptions('portfolioDropdown', this.value)">
+                        <ul class="max-h-60 overflow-auto p-2">
+                            <!-- Options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Currency -->
+            <div class="category">
+                <label class="block text-sm font-medium text-gray-700">Currency</label>
+                <div class="relative">
+                    <button onclick="toggleDropdown('currencyDropdown')"
+                        class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
+                        Select Currencies
+                    </button>
+                    <div id="currencyDropdown"
+                        class="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden">
+                        <input type="text" placeholder="Search"
+                            class="w-full p-2 border-b border-gray-300 focus:outline-none"
+                            onkeyup="filterOptions('currencyDropdown', this.value)">
+                        <ul class="max-h-60 overflow-auto p-2">
+                            <!-- Options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instrument -->
+            <div class="category">
+                <label class="block text-sm font-medium text-gray-700">Instrument</label>
+                <div class="relative">
+                    <button onclick="toggleDropdown('instrumentDropdown')"
+                        class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
+                        Select Instruments
+                    </button>
+                    <div id="instrumentDropdown"
+                        class="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden">
+                        <input type="text" placeholder="Search"
+                            class="w-full p-2 border-b border-gray-300 focus:outline-none"
+                            onkeyup="filterOptions('instrumentDropdown', this.value)">
+                        <ul class="max-h-60 overflow-auto p-2">
+                            <!-- Options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Discount Curve -->
+            <div class="category">
+                <label class="block text-sm font-medium text-gray-700">Discount Curve</label>
+                <div class="relative">
+                    <button onclick="toggleDropdown('discountCurveDropdown')"
+                        class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
+                        Select Discount Curves
+                    </button>
+                    <div id="discountCurveDropdown"
+                        class="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden">
+                        <input type="text" placeholder="Search"
+                            class="w-full p-2 border-b border-gray-300 focus:outline-none"
+                            onkeyup="filterOptions('discountCurveDropdown', this.value)">
+                        <ul class="max-h-60 overflow-auto p-2">
+                            <!-- Options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projection Curve -->
+            <div class="category">
+                <label class="block text-sm font-medium text-gray-700">Projection Curve</label>
+                <div class="relative">
+                    <button onclick="toggleDropdown('projectionCurveDropdown')"
+                        class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
+                        Select Projection Curves
+                    </button>
+                    <div id="projectionCurveDropdown"
+                        class="absolute mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg z-10 hidden">
+                        <input type="text" placeholder="Search"
+                            class="w-full p-2 border-b border-gray-300 focus:outline-none"
+                            onkeyup="filterOptions('projectionCurveDropdown', this.value)">
+                        <ul class="max-h-60 overflow-auto p-2">
+                            <!-- Options will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="gap-4 mt-4 mb-2">
+            <button onclick="collectAndSendData()"
+                class="flex-1 w-auto mt-8 green-button text-gray-700 text-sm py-2 rounded">Generate Deals</button>
+            <button id="resetCurveGroup" class="gray-button">Clear Selections</button>
+        </div>
+    </div>
 
     <script>
         fetch('/api/deals-manager/filters')
             .then(res => res.json())
             .then(data => {
-                console.log('Filter options:', data);
-                // Populate dropdowns here
+                console.log(data);
+                populateDropdown('portfolioDropdown', data.Portfolio);
+                populateDropdown('currencyDropdown', data.Currency);
+                populateDropdown('instrumentDropdown', data.Instrument);
+                populateDropdown('discountCurveDropdown', data.DiscountCurve);
+                populateDropdown('projectionCurveDropdown', data.ProjectionCurve);
             });
 
+        function populateDropdown(dropdownId, options) {
+            const dropdown = document.getElementById(dropdownId).querySelector('ul');
+            options.forEach(optionValue => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('flex', 'items-center', 'py-2');
+                listItem.innerHTML = `
+                    <input type="checkbox" id="${optionValue}" value="${optionValue}" class="mr-2">
+                    <label for="${optionValue}">${optionValue}</label>
+                `;
+                dropdown.appendChild(listItem);
+            });
+        }
+
+        function toggleDropdown(id) {
+            const dropdown = document.getElementById(id);
+            dropdown.classList.toggle('hidden');
+        }
+
+        function filterOptions(dropdownId, searchTerm) {
+            const dropdown = document.getElementById(dropdownId);
+            const options = dropdown.querySelectorAll('ul li');
+
+            options.forEach(option => {
+                const label = option.querySelector('label').textContent;
+                if (label.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    option.style.display = '';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        }
+
+        function validateAssetIds(assetIds) {
+            const regex = /^\d+(,\d+)*$/; // Regex to match numbers separated by commas
+            return regex.test(assetIds);
+        }
+
+        function collectAndSendData() {
+            // Collect Asset IDs
+            const assetIdInput = document.getElementById('assetIdInput');
+            const assetIds = assetIdInput.value.trim();
+
+            const assetIdArray = assetIds.split(',').map(id => id.trim()).filter(id => id);
+
+            // Collect selected options for each dropdown category
+            const categories = ['portfolioDropdown', 'currencyDropdown', 'instrumentDropdown', 'discountCurveDropdown', 'projectionCurveDropdown'];
+            const selectedData = {};
+
+            categories.forEach(categoryId => {
+                const dropdown = document.getElementById(categoryId);
+                const selectedOptions = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked'))
+                    .map(checkbox => checkbox.value);
+                const categoryName = categoryId.replace('Dropdown', ''); // e.g., portfolioDropdown -> portfolio
+                selectedData[categoryName.charAt(0).toUpperCase() + categoryName.slice(1)] = selectedOptions;
+            });
+
+            // Combine into final data object
+            const dataToSend = {
+                'Asset Id': assetIdArray,
+                ...selectedData
+            };
+
+            console.log('Data to send:', dataToSend);
+
+            // Send data to backend
+            fetch('/api/deals-manager/send-selected-data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(dataToSend)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
     </script>
 </body>
 
