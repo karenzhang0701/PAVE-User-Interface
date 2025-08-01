@@ -1,5 +1,3 @@
-// Backend for scenario generation
-
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
@@ -100,30 +98,8 @@ function extractCurveNamesFromText(text) {
 }
 
 // Returns list of curve names from definitions file for specific curve class
-function getCurveNames(source, type) {
-  let filePaths = [];
-
-  const rootDir = path.join(__dirname, '..');
-
-  if (source === 'Findur' && type === 'CDS') {
-    filePaths = [path.join(rootDir, 'definitions', 'CurveList_CDS.txt'),
-    path.join(rootDir, 'definitions', 'CDef_CDS.txt')
-    ];
-  } else if (source === 'Findur' && type === 'CDX') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CDX.txt')];
-  } else if (source === 'Findur' && type === 'CPI') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CPI_ZCISActAct.txt')];
-  } else if (source === 'Findur' && type === 'Swap & Bond') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_Swap_Bond.txt')];
-  } else if (source === 'Findur' && type === 'Data Container') {
-    filePaths = [path.join(rootDir, 'definitions', 'DataContainer_Template.txt')];
-  } else if (source === 'ALM') {
-    filePaths = [path.join(rootDir, 'definitions', 'CQuotes_ALM.txt')];
-  } else if (source === 'Findur' && type === 'IRPDF') {
-    filePaths = [path.join(rootDir, 'definitions', 'IRPDF_Template.txt'),
-    path.join(rootDir, 'definitions', 'CDef_IRPDF_JPYAUD.txt')
-    ];
-  }
+function getCurveNames() {
+  let filePaths = [path.join(__dirname, '..', 'MasterFile.txt')];
 
   const allNames = new Set();
   for (const filePath of filePaths) {
@@ -133,7 +109,6 @@ function getCurveNames(source, type) {
       names.forEach(name => allNames.add(name));
     }
   }
-
   return Array.from(allNames).sort();
 }
 
@@ -166,74 +141,64 @@ function extractCurveBlock(text, curveName) {
 }
 
 // Returns definition block for a curve
-function defBlock(curveName, source, type = null) {
-  console.log(type);
+function defBlock(curveName) {
+  const blocks = [];
+  const cdsNames = new Set([
+    'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+    'Surv_Honda_SNRFOR_CR14_100bp.JPY',
+    'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
+    'Surv_Islam_SNRFOR_CR14_100bp.USD'
+  ]);
 
-  // Map Surv CDS curves to corresponding Surv_Generic.USD / Surv_Generic.JPY definitions
-  if (curveName.startsWith('Surv') && type == 'CDS') {
+  const filePath = path.join(__dirname, '..', 'MasterFile.txt');
+  const content = fs.readFileSync(filePath, 'utf8');
+
+  if (cdsNames.has(curveName)) {
     if (curveName.endsWith('.JPY')) {
-      const filePath = path.join(__dirname, '..', 'definitions', 'CDef_CDS.txt');
-      const content = fs.readFileSync(filePath, 'utf8');
-      const block = extractCurveBlock(content, 'Surv_Generic.JPY');
-      if (block) {
-        curveCache.definitions.set('Surv_Generic.JPY', block)
-        return block;
-      }
+      const tonar = extractCurveBlock(content, 'TONAR.ASIA.JPY');
+      const surv = extractCurveBlock(content, 'Surv_Generic.JPY');
+      const main = extractCurveBlock(content, curveName);
+      if (tonar) blocks.push({ name: 'TONAR.ASIA.JPY', block: tonar });
+      if (surv) blocks.push({ name: 'Surv_Generic.JPY', block: surv });
+      if (main) blocks.push({ name: curveName, block: main });
     } else if (curveName.endsWith('.USD')) {
-      const filePath = path.join(__dirname, '..', 'definitions', 'CDef_CDS.txt');
-      const content = fs.readFileSync(filePath, 'utf8');
-      const block = extractCurveBlock(content, 'Surv_Generic.USD');
-      if (block) {
-        curveCache.definitions.set('Surv_Generic.USD', block)
-        return block;
-      }
+      const sofr = extractCurveBlock(content, 'SOFR.ASIA.USD');
+      const surv = extractCurveBlock(content, 'Surv_Generic.USD');
+      const main = extractCurveBlock(content, curveName);
+      if (sofr) blocks.push({ name: 'SOFR.ASIA.USD', block: sofr });
+      if (surv) blocks.push({ name: 'Surv_Generic.USD', block: surv });
+      if (main) blocks.push({ name: curveName, block: main });
+    }
+  } else {
+    if (curveCache.definitions.has(curveName)) {
+      blocks.push({ name: curveName, block: curveCache.definitions.get(curveName) });
+      return blocks;
+    }
+
+    const block = extractCurveBlock(content, curveName);
+    if (block) {
+      curveCache.definitions.set(curveName, block);
+      blocks.push({ name: curveName, block });
     }
   }
-
-  if (curveCache.definitions.has(curveName)) {
-    return curveCache.definitions.get(curveName);
-  }
-
-  const rootDir = path.join(__dirname, '..');
-  let filePaths = [];
-
-  if (type === 'CDX') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CDX.txt')];
-  } else if (type === 'CDS') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CDS.txt')];
-  } else if (type === 'CPI') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CPI_ZCISActAct.txt')];
-  } else if (type === 'Data Container') {
-    filePaths = [path.join(rootDir, 'definitions', 'DataContainer_Template.txt')];
-  } else if (type === 'Swap & Bond') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_Swap_Bond.txt')];
-  } else if (type === 'IRPDF') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_IRPDF_JPYAUD.txt')];
-  } else if (source === 'ALM') {
-    filePaths = [path.join(rootDir, 'definitions', 'CQuotes_ALM.txt')];
-  }
-
-  for (const filePath of filePaths) {
-    if (fs.existsSync(filePath)) {
-      const content = fs.readFileSync(filePath, 'utf8');
-      const block = extractCurveBlock(content, curveName);
-      if (block) {
-        curveCache.definitions.set(curveName, block);
-        return block;
-      }
-    }
-  }
-
-  return null;
+  console.log(blocks);
+  return blocks;
 }
 
 
 // Returns parent indices for given curve from the definitions file
-function findParentIndices(curveName, source, type) {
+function findParentIndices(curveName) {
 
   // CDS: map Surv curves to corresponding Surv_Generic definitions for USD andJPY
   // Parent Curves: Surv_Generic.USD --> SOFR.ASIA.USD, Surv_Generic.JPY --> TONAR.ASIA.JPY
-  if (curveName.startsWith('Surv') && type == 'CDS') {
+  const cdsNames = new Set([
+    'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+    'Surv_Honda_SNRFOR_CR14_100bp.JPY',
+    'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
+    'Surv_Islam_SNRFOR_CR14_100bp.USD'
+  ]);
+
+  if (cdsNames.has(curveName)) {
     if (curveName.endsWith('.JPY')) {
       curveName = 'Surv_Generic.JPY';
     } else if (curveName.endsWith('.USD')) {
@@ -242,27 +207,7 @@ function findParentIndices(curveName, source, type) {
   }
 
   const rootDir = path.join(__dirname, '..');
-  let filePaths = [];
-
-  // Determine which files to search based on source and type
-  if (type === 'CDX') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CDX.txt')];
-  } else if (type === 'CDS') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CDS.txt')];
-  } else if (type === 'CPI') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_CPI_ZCISActAct.txt')];
-  } else if (type === 'Data Container') {
-    filePaths = [path.join(rootDir, 'definitions', 'DataContainer_Template.txt')];
-  } else if (type === 'Swap & Bond') {
-    filePaths = [path.join(rootDir, 'definitions', 'CDef_Swap_Bond.txt')];
-  } else if (type === 'IRPDF') {
-    filePaths = [
-      path.join(rootDir, 'definitions', 'CDef_IRPDF_JPYAUD.txt'),
-      path.join(rootDir, 'definitions', 'IRPDF_Template.txt')
-    ];
-  } else if (source === 'ALM') {
-    filePaths = [path.join(rootDir, 'definitions', 'CQuotes_ALM.txt')];
-  }
+  let filePaths = [path.join(rootDir, 'MasterFile.txt')];
 
   for (const filePath of filePaths) {
     if (!fs.existsSync(filePath)) continue;
@@ -287,8 +232,7 @@ function findParentIndices(curveName, source, type) {
 // Returns list of all curve names for specific curve class
 router.get('/all-curve-names', (req, res) => {
   try {
-    const { source, type } = req.query;
-    const curveNames = getCurveNames(source, type);
+    const curveNames = getCurveNames();
     res.json(curveNames);
   } catch (err) {
     res.status(500).json({ error: 'Failed to extract curve names' });
@@ -532,15 +476,13 @@ function getCurveCategory(curveName) {
 
 
 // Return tenors from definitions block
-function extractTenorsFromDef(defBlock) {
+function extractTenorsFromDef(defBlock, curveName) {
   const lines = defBlock.split('\n');
   let tenors = [];
 
-  // Find the start of the CurveMarketQuotes section
   const startIndex = lines.findIndex(line => line.includes('///:CurveMarketQuotes'));
   if (startIndex === -1) return [];
 
-  // Look for the header row and identify the index of the 'Tenor' column
   let tenorIndex = -1;
   for (let i = startIndex + 1; i < lines.length; i++) {
     const headerLine = lines[i].trim();
@@ -549,7 +491,6 @@ function extractTenorsFromDef(defBlock) {
     const headers = headerLine.split(/\s+/);
     tenorIndex = headers.indexOf('Tenor');
     if (tenorIndex !== -1) {
-      // Found the header, now extract tenors from the rows below
       for (let j = i + 2; j < lines.length; j++) {
         const row = lines[j].trim();
         if (row === '' || row.startsWith('#EndCurve')) break;
@@ -563,11 +504,11 @@ function extractTenorsFromDef(defBlock) {
     }
   }
 
-  return [...new Set(tenors)];
+  return [...new Set(tenors)].map(tenor => `${tenor}${curveName}`);
 }
 
 
-function extractRiskFactors(text) {
+function extractRiskFactors(text, curveName) {
   const lines = text.split('\n');
   const riskFactors = [];
 
@@ -634,36 +575,55 @@ function extractRiskFactors(text) {
 
 
 // Send tenors to frontend
-router.get('/tenors/:curveName', (req, res) => {
-  const curveName = req.params.curveName;
-  const source = req.query.source;
-  const type = req.query.type;
-
+router.post('/tenors', (req, res) => {
+  const curves = req.body.curves;
+  const shock = req.body.shock;
   const filePath = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt');
   const content = fs.readFileSync(filePath, 'utf8');
-  const block = extractCurveBlock(content, curveName);
 
-  const tenors = extractTenorsFromDef(block);
-  res.json({ curveName, tenors });
-})
+  const dataContainerNames = new Set([
+    'BOND_PRICES.CAD', 'BOND_PRICES.JPY', 'BOND_PRICES.USD',
+    'MarketPX.CAD', 'MarketPX.JPY', 'MarketPX.USD',
+    'FX_CAD.USD', 'FX_JPY.USD', 'FX_SGD.USD', 'FX_USD.AUD',
+    'FX_USD.EUR', 'FX_USD.GBP', 'FX_USD.NZD',
+    'IBOXUSHY.USD', 'MFCPRIndx.CAD'
+  ]);
 
-// Returns extracted risk factors from scenario quotes file
-router.get('/risk-factors/:curveName', (req, res) => {
-  const curveName = req.params.curveName;
-  const filePath = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt');
-
-  try {
-    const content = fs.readFileSync(filePath, 'utf8');
+  const curveData = curves.map(curveName => {
     const block = extractCurveBlock(content, curveName);
-    if (!block) {
-      return res.status(404).json({ error: 'Curve not found' });
+    const curveCategory = getCurveCategory(curveName);
+    let tenors = [];
+
+    const curveType = dataContainerNames.has(curveName) ? 'EQ' : 'IR';
+    console.log(shock === 'ALL');
+
+    if (shock === 'ALL') {
+      if (curveCategory === 'BondSpotCurve' || curveCategory === 'SpotPriceCurve') {
+        tenors = extractRiskFactors(block);
+      } else if (curveType === 'IR') {
+        tenors = [`3m`, `6m`, `1y`, `2y`,
+          `3y`, `5y`, `7y`, `10y`,
+          `20y`, `30y`
+        ];
+      } else {
+        tenors = extractTenorsFromDef(block, curveName);
+      }
+    } else if (shock === 'Curve Name') {
+      if (curveCategory === 'BondSpotCurve' || curveCategory === 'SpotPriceCurve') {
+        tenors = extractRiskFactors(block);
+      } else {
+        tenors = extractTenorsFromDef(block, curveName);
+      }
     }
-    const riskFactors = extractRiskFactors(block);
-    res.json({ curveName, riskFactors });
-  } catch (err) {
-    console.error('Failed to extract risk factors:', err);
-    res.status(500).json({ error: 'Internal server error' });
-  }
+
+    return {
+      name: curveName,
+      type: curveType,
+      tenors: tenors
+    };
+  });
+
+  res.json({ curves: curveData });
 });
 
 
@@ -683,15 +643,13 @@ router.get('/quotes-curve-list', (req, res) => {
 router.get('/quotes/:curveName', (req, res) => {
   const curveName = req.params.curveName;
   const filePath = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt');
-  const source = req.query.source;
-  const type = req.query.type;
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send('');
   }
 
   const content = fs.readFileSync(filePath, 'utf8');
-  const parents = findParentIndices(curveName, source, type) || [];
+  const parents = findParentIndices(curveName) || [];
 
   const blocks = content.split('#BeginCurve').filter(Boolean);
   const relevantBlocks = blocks.filter(block => {
@@ -739,17 +697,7 @@ router.get('/original-quotes/:curveName', (req, res) => {
 // Runs Python script to generate curve quotes data for selected curves
 router.post('/generate-quotes', async (req, res) => {
   console.log('Running Python script');
-  const { date, source, type } = req.body;
-
-  // Skip Python script for ALM curves
-  if (source === 'ALM') {
-    // Store copy of original quotes data for displaying
-    const quotePath = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt');
-    const originalPath = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup_original.txt');
-    fs.copyFileSync(quotePath, originalPath);
-
-    return res.json({ message: 'ALM quotes loaded successfully', missingCurves: [] });
-  }
+  const { date } = req.body;
 
   const defPath = path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt');
   const quotePath = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt');
@@ -764,23 +712,13 @@ router.post('/generate-quotes', async (req, res) => {
     // Create Python script command dpending on curve type
     const args = [scriptPath, '-curveDate', date];
 
-    // Include curve template for Data Container and IRPDF curves
-    if (type === 'Data Container') {
-      args.push('-curveTemplate', defPath);
-    } else {
-      args.push('-curveDefFile', defPath);
-    }
+    args.push('-curveDefFile', defPath);
 
-    if (type === 'IRPDF') {
-      const templatePath = path.join(__dirname, '..', 'scenario_generation', 'IRPDF_Template_ScenarioGroup.txt');
-      args.push('-curveTemplate', templatePath);
-    }
+    const templatePath = path.join(__dirname, '..', 'scenario_generation', 'Templates_ScenarioGroup.txt');
+    args.push('-curveTemplate', templatePath);
 
-    // For CDS curves, include curve name file
-    if (type === 'CDS') {
-      const curveNamesPath = path.join(__dirname, '..', 'scenario_generation', 'CurveList_CDS_ScenarioGroup.txt');
-      args.push('-curveNames', curveNamesPath);
-    }
+    const curveNamesPath = path.join(__dirname, '..', 'scenario_generation', 'CurveNames_ScenarioGroup.txt');
+    args.push('-curveNames', curveNamesPath);
 
     const quotePath = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt');
     args.push('-curveQuoteFile', quotePath);
@@ -822,76 +760,101 @@ router.post('/generate-quotes', async (req, res) => {
 
 // Add definitions for selected curves and their parent curves to CDef_ScenarioGroup.txt
 router.post('/generate-selected-curves-def', (req, res) => {
-  const { curves, source, type } = req.body;
+
+  const cdsNames = new Set([
+    'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+    'Surv_Honda_SNRFOR_CR14_100bp.JPY',
+    'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
+    'Surv_Islam_SNRFOR_CR14_100bp.USD'
+  ]);
+
+  const irpdfNames = new Set([
+    'FX_JPY.USD', 'FX_USD.AUD'
+  ]);
+
+  const dataContainerNames = new Set([
+    'BOND_PRICES.CAD', 'BOND_PRICES.JPY', 'BOND_PRICES.USD',
+    'MarketPX.CAD', 'MarketPX.JPY', 'MarketPX.USD',
+    'FX_CAD.USD', 'FX_JPY.USD', 'FX_SGD.USD', 'FX_USD.AUD',
+    'FX_USD.EUR', 'FX_USD.GBP', 'FX_USD.NZD',
+    'IBOXUSHY.USD', 'MFCPRIndx.CAD'
+  ]);
+
+  const masterPath = path.join(__dirname, '..', 'MasterFile.txt');
+  const masterText = fs.readFileSync(masterPath, 'utf8');
+
+  const { curves } = req.body;
   const visited = new Set();
   const allCurves = new Set();
+
+  const matchedCDS = new Set();
+  const matchedIRPDFDataContainer = new Set();
 
   function collectHierarchy(curveName) {
     if (visited.has(curveName)) return;
     visited.add(curveName);
-    const parents = findParentIndices(curveName, source, type) || [];
-    parents.forEach(collectHierarchy);
-    allCurves.add(curveName);
+
+    if (cdsNames.has(curveName)) {
+      matchedCDS.add(curveName);
+      allCurves.add(curveName);
+    } else if (irpdfNames.has(curveName) || dataContainerNames.has(curveName)) {
+      matchedIRPDFDataContainer.add(curveName);
+    } else {
+      const parents = findParentIndices(curveName) || [];
+      parents.forEach(collectHierarchy);
+      allCurves.add(curveName);
+    }
   }
 
   curves.forEach(collectHierarchy);
 
-  // ALM Curves: add selected curves to CQuotes_ScenarioGroup.txt
-  const defPath = source === 'ALM' ?
-    path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt') :
-    path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt');
+  const defPath = path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt');
   fs.writeFileSync(defPath, '', 'utf8');
 
-  let combinedDef = '';
-  for (const name of allCurves) {
-    const def = defBlock(name, source, type);
-    if (def) combinedDef += def + '\n';
-  }
+
+  console.log(allCurves);
+  console.log(matchedCDS);
+  console.log(matchedIRPDFDataContainer);
 
   try {
-    fs.writeFileSync(defPath, combinedDef, 'utf8');
+    if (allCurves.size > 0) {
+      const existingDefs = fs.readFileSync(defPath, 'utf8');
 
-    // CDS curves -- add names of selected curves to CurveList_CDS_ScenarioGroup.txt
-    // Used by Python script to get quotes data
-    if (type === 'CDS') {
-      const cdsNameListPath = path.join(__dirname, '..', 'definitions', 'CurveList_CDS.txt');
-      const cdsCurveListPath = path.join(__dirname, '..', 'scenario_generation', 'CurveList_CDS_ScenarioGroup.txt');
+      const existingCurveNames = extractCurveNamesFromText(existingDefs);
+      const writtenCurves = new Set(existingCurveNames);
+      let combinedDef = '';
 
-      const cdsNamesRaw = fs.readFileSync(cdsNameListPath, 'utf8');
-      const validCDSCurves = extractCurveNamesFromText(cdsNamesRaw);
+      for (const name of allCurves) {
+        const blocks = defBlock(name); // returns array of { name, block }
 
-      const matchedCurves = [...allCurves].filter(name => validCDSCurves.has(name));
-      const cdsOutput = matchedCurves.join('\n') + '\n';
+        for (const { name: curveName, block } of blocks) {
+          // Prevent duplicates
+          if (!writtenCurves.has(curveName)) {
+            combinedDef += block + '\n';
+            writtenCurves.add(curveName);
+          }
+        }
+      }
 
-      fs.writeFileSync(cdsCurveListPath, cdsOutput, 'utf8');
+      if (combinedDef.trim()) {
+        fs.appendFileSync(defPath, combinedDef, 'utf8');
+      }
     }
 
-    // IRPDF curves -- add template of selected curves (from IRPDF_Template.txt) to IRPDF_Template_ScenarioGroup.txt
-    // Python script will use this to get quotes data
-    if (type === 'IRPDF') {
-      const fxTemplatePath = path.join(__dirname, '..', 'definitions', 'IRPDF_Template.txt');
-      const irpdfOutputPath = path.join(__dirname, '..', 'scenario_generation', 'IRPDF_Template_ScenarioGroup.txt');
 
-      try {
-        const fxTemplateContent = fs.readFileSync(fxTemplatePath, 'utf8');
+    if (matchedCDS.size > 0) {
+      const cdsCurveList = path.join(__dirname, '..', 'scenario_generation', 'CurveNames_ScenarioGroup.txt');
+      const cdsOutput = [...matchedCDS].join('\n') + '\n';
+      fs.writeFileSync(cdsCurveList, cdsOutput, 'utf8');
+    }
 
-        // Match selected curves
-        const matchedIRPDFCurves = [...allCurves].filter(name =>
-          fxTemplateContent.toUpperCase().includes(`CURVENAME\t${name.toUpperCase()}`)
-        );
-
-        // Extract and write full curve blocks
-        const matchedBlocks = matchedIRPDFCurves
-          .map(name => extractCurveBlock(fxTemplateContent, name))
-          .filter(Boolean)
-          .join('\n\n');
-
-        fs.writeFileSync(irpdfOutputPath, matchedBlocks.trim() + '\n', 'utf8');
-        console.log(`✅ IRPDF curve blocks written to ${irpdfOutputPath}`);
-      } catch (err) {
-        console.error('❌ Failed to process IRPDF template:', err);
-        return res.status(500).json({ error: 'Failed to process IRPDF template' });
-      }
+    if (matchedIRPDFDataContainer.size > 0) {
+      const irpdfOutputPath = path.join(__dirname, '..', 'scenario_generation', 'Templates_ScenarioGroup.txt');
+      const matchedBlocks = [...matchedIRPDFDataContainer]
+        .map(name => extractCurveBlock(masterText, name))
+        .filter(Boolean)
+        .join('\n\n');
+      fs.writeFileSync(irpdfOutputPath, matchedBlocks.trim() + '\n', 'utf8');
     }
 
     res.json({ message: '✅ Curve group saved successfully.' });
@@ -905,25 +868,45 @@ router.post('/generate-selected-curves-def', (req, res) => {
 router.post('/save-scenario-def', (req, res) => {
   const scenario = req.body;
   const type = req.query.type;
+  const isShockByCurveType = ['Bond', 'YieldCurve', 'Surv'].includes(scenario.curveName);
 
   const fileName = `scenario_definition.txt`;
   const filePath = path.join(__dirname, '..', 'scenario_generation', fileName);
 
   const prefix = type === 'Data Container' ? 'EQ' : 'IR';
-
   let content = `\nGridSurfaceName\tALM_QIS_DV01\n///:Parameters\n`;
-  content += `${prefix}DataType\t${scenario.IRDataType}\n`;
 
-  if (scenario.IRRiskFactors) {
-    content += `${prefix}RiskFactors\t${scenario.IRRiskFactors}\n`;
+  if (scenario.containsDC === 'some') {
+    content += `IRDataType\t${scenario.IRDataType}\n`;
+    content += `EQDataType\t${scenario.EQDataType}\n`;
+  } else if (scenario.containsDC === 'all') {
+    content += `EQDataType\t${scenario.EQDataType}\n`;
   } else {
-    content += `${prefix}RiskFactors\t3m:6m:1y:2y:3y:5y:7y:10y:20y:30y\n`;
+    content += `IRDataType\t${scenario.IRDataType}\n`;
   }
 
-  const shockVal = type === 'Data Container' ? '0.01' : '0.001';
+  if (!scenario.IRRiskFactors && !scenario.EQRiskFactors) {
+    content += `${prefix}RiskFactors\t3m:6m:1y:2y:3y:5y:7y:10y:20y:30y\n`;
+  } else if (scenario.containsDC === 'some') {
+    content += `IRRiskFactors\t${scenario.IRRiskFactors}\n`;
+    content += `EQRiskFactors\t${scenario.EQRiskFactors}\n`;
+  } else if (scenario.containsDC === 'all') {
+    content += `EQRiskFactors\t${scenario.EQRiskFactors}\n`;
+  } else if (scenario.containsDC === 'none') {
+    content += `IRRiskFactors\t${scenario.IRRiskFactors}\n`;
+  }
 
   if (scenario.IRShockType === 'Spread') content += `${prefix}ShockType\tSpread\n`;
-  content += `${prefix}ShockAmt\t${shockVal}\n`;
+
+  if (scenario.containsDC === 'some') {
+    content += `IRShockAmt\t0.001\n`;
+    content += `EQShockAmt\t0.01\n`;
+  } else if (scenario.containsDC === 'all') {
+    content += `EQShockAmt\t0.01\n`;
+  } else {
+    content += `IRShockAmt\t0.001\n`;
+  }
+
   if (scenario.Greek === false) content += `GreekOff\ttrue\n`;
 
   if (scenario.tenors && Array.isArray(scenario.tenors)) {
@@ -934,11 +917,7 @@ router.post('/save-scenario-def', (req, res) => {
 
   scenario.rows.forEach(row => {
     const rowValues = row.values.join('\t');
-    if (scenario.tenors) {
-      content += `${row.GridName}\t${rowValues}\n`;
-    } else {
-      content += `${row.GridName}\t${row.CurveName}\t${rowValues}\n`;
-    }
+    content += `${row.GridName}\t${rowValues}\n`;
   });
 
   try {
@@ -954,29 +933,16 @@ router.post('/save-scenario-def', (req, res) => {
 // Run PAVE for scenario generation
 router.post('/run-scenario-generation', (req, res) => {
   const valuationDate = req.body.valuationDate;
-  const source = req.body.source;
-  const type = req.body.type;
 
   // Run from scenario_generation folder
   const workingDir = path.join(__dirname, '..', 'scenario_generation');
   const exePath = path.join('..', 'Dll_Exe_file', 'PAVE.exe');
+  const defFilePath = path.join(workingDir, 'CDef_ScenarioGroup.txt');
 
-  const isALM = source === 'ALM';
-  const isIRPDF = type === 'IRPDF';
-  const isDataContainer = type === 'Data Container';
-
-  // Skip definitions file arg for ALM and Data Container curves
   let defFlag = '';
-  if (!isALM && !isDataContainer) {
-    let defFile = '';
-    if (isIRPDF) {
-      defFile = path.join('..', 'definitions', 'CDef_IRPDF_JPYAUD.txt');
-    } else if (type === 'CDS') {
-      defFile = path.join('..', 'definitions', 'CDef_CDS.txt');
-    } else {
-      defFile = 'CDef_ScenarioGroup.txt';
-    }
-    defFlag = `-txtcdf "${defFile}"`;
+  const stats = fs.statSync(defFilePath);
+  if (stats.size > 0) {
+    defFlag = '-txtcdf CDef_ScenarioGroup.txt';
   }
 
   const quoteFile = 'CQuotes_ScenarioGroup.txt';
@@ -988,12 +954,13 @@ router.post('/run-scenario-generation', (req, res) => {
   console.log(`Running: ${command}`);
 
   try {
-    const output = execSync(command, { cwd: workingDir }).toString();
+    const output = execSync(command, { cwd: workingDir, maxBuffer: 1024 * 1024 * 50 });
     console.log(`✅ Output saved to: ${outputFilePath}`);
 
+    const fileContent = fs.readFileSync(outputFilePath, 'utf8');
     const debugPath = path.join(__dirname, '..', 'scenario_generation', 'Debug.txt');
     const debugContent = fs.readFileSync(debugPath, 'utf8');
-    res.json([{ curve: 'Scenario', output, debug: debugContent }]);
+    res.json([{ curve: 'Scenario', output: fileContent, debug: debugContent }]);
   } catch (err) {
     console.error(`❌ PAVE failed:`, err.message);
     res.status(500).json({ error: `PAVE failed: ${err.message}` });
@@ -1020,11 +987,8 @@ router.get('/scenario.txt', (req, res) => {
 
 // Returns parent curves for given curve
 router.get('/parents/:curveName', (req, res) => {
-  const source = req.query.source;
-  const type = req.query.type;
-
   try {
-    const parents = findParentIndices(req.params.curveName, source, type);
+    const parents = findParentIndices(req.params.curveName);
     if (parents == null) {
       return res.status(404).json({ error: 'Curve not found' });
     }
@@ -1038,16 +1002,37 @@ router.get('/parents/:curveName', (req, res) => {
 // Returns definition block for specific curve
 router.get('/definition/:curveName', (req, res) => {
   try {
-    const source = req.query.source;
-    const type = req.query.type;
+    let { curveName } = req.params;
+    const cdsNames = new Set([
+      'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+      'Surv_Honda_SNRFOR_CR14_100bp.JPY',
+      'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
+      'Surv_Islam_SNRFOR_CR14_100bp.USD'
+    ]);
 
-    const block = defBlock(req.params.curveName, source, type);
-    res.send(block.trim());
+    if (cdsNames.has(curveName)) {
+      if (curveName.endsWith('.JPY')) {
+        curveName = 'Surv_Generic.JPY';
+      } else if (curveName.endsWith('.USD')) {
+        curveName = 'Surv_Generic.USD';
+      }
+    }
+    const blocks = defBlock(curveName);
+
+    // Find the block that matches the curveName
+    const mainBlock = blocks.find(b => b.name === curveName);
+
+    if (mainBlock && typeof mainBlock.block === 'string') {
+      res.send(mainBlock.block.trim());
+    } else {
+      res.status(404).send(`Definition block for ${curveName} not found.`);
+    }
   } catch (err) {
     console.error('Failed to read indv def file:', err);
     res.status(500).json({ error: 'Failed to read indv def file' });
   }
 });
+
 
 // Returns curve category from CQuotes file
 router.get('/curve-category/:curveName', (req, res) => {
@@ -1068,6 +1053,16 @@ router.get('/download/scenarioQuotes', (req, res) => {
     res.download(filePath, 'CQuotes_ScenarioGroup.txt');
   } else {
     res.status(404).json({ error: 'Quotes file not found ' });
+  }
+})
+
+// Download curve definitions
+router.get('/download/curveDef', (req, res) => {
+  const filePath = path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt');
+  if (fs.existsSync(filePath)) {
+    res.download(filePath, 'CDef_ScenarioGroup.txt');
+  } else {
+    res.status(404).json({ error: 'Def file not found ' });
   }
 })
 
@@ -1094,12 +1089,12 @@ router.get('/download/scenarioDefinition', (req, res) => {
 
 // Download Debug.txt
 router.get('/download/debug', (req, res) => {
-    const filePath = path.join(__dirname, '..', 'scenario_generation', 'Debug.txt');
-    if (fs.existsSync(filePath)) {
-        res.download(filePath, 'Debug.txt');
-    } else {
-        res.status(404).json({ error: 'Debug file not found' });
-    }
+  const filePath = path.join(__dirname, '..', 'scenario_generation', 'Debug.txt');
+  if (fs.existsSync(filePath)) {
+    res.download(filePath, 'Debug.txt');
+  } else {
+    res.status(404).json({ error: 'Debug file not found' });
+  }
 })
 
 // Clear CDef_ScenarioGroup.txt and CQuotes_ScenarioGroup.txt for resetting curve group
@@ -1108,9 +1103,14 @@ router.post('/clear-curve-files', (req, res) => {
     defFile = path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt');
     quotesFile = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt');
     originalQuotesFile = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup_original.txt');
+    curveNames = path.join(__dirname, '..', 'scenario_generation', 'CurveNames_ScenarioGroup.txt');
+    template = path.join(__dirname, '..', 'scenario_generation', 'Templates_ScenarioGroup.txt');
+
     fs.writeFileSync(defFile, '');
     fs.writeFileSync(quotesFile, '');
     fs.writeFileSync(originalQuotesFile, '');
+    fs.writeFileSync(curveNames, '');
+    fs.writeFileSync(template, '');
     res.json({ status: 'success', message: 'Curve group reset successfully.' });
   } catch (err) {
     console.error('Error clearing files:', err);

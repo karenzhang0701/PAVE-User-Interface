@@ -47,19 +47,6 @@
           </div>
         </div>
 
-        <!-- Curve Type -->
-        <div class="mb-6">
-          <label for="curveSource">
-            <span class="quote-heading">Curve Class</span>
-            <select name="curveSource" id="curveSource" onchange="updateCurveTypes()"
-              class="mt-0.5 mb- w-auto rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-00 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
-              <option value="Findur">Findur Derivative Valuation Curves</option>
-              <option value="ALM">ALM Customized Curves</option>
-            </select>
-          </label>
-          <div id="curveTypeContainer" class="mt-2 space-y-1"></div>
-        </div>
-
         <button onclick="runAllCurves()" class="flex-1 green-button">Run All Curves</button>
 
         <!-- Curve Search -->
@@ -94,7 +81,7 @@
             <button onclick="getQuotesData()" class="flex-1 w-auto green-button text-gray-700 text-sm py-2 rounded">
               Get Quotes Data
             </button>
-            <button id="resetCurveGroup" class="gray-button" onclick="resetCurveGroup()">Reset</button>
+            <button id="resetCurveGroup" class="gray-button" onclick="resetCurveGroup()">Clear Curves</button>
           </div>
           <div id="loadingMessage" class="text-green-600 text-sm mt-1 hidden">Getting data...</div>
 
@@ -102,7 +89,7 @@
           <div id="selectedCurves" class="space-y-2 mt-4"></div>
 
           <div class="mb-4">
-            <button onclick="runSelectedCurves()" class="green-button mb-1" style="min-width: 235px;">Run Selected
+            <button onclick="runSelectedCurves()" class="green-button mb-1" style="min-width: 242px;">Run Selected
               Curves</button>
             <div id="runningMessage" class="text-green-600 text-sm mt-1 hidden">Running PAVE...</div>
           </div>
@@ -114,13 +101,15 @@
   </div>
   </div>
   <div id="main" class="ml-4">
-    <div id="curveContent">
-      <p>Select curve group and view definition and quotes</p>
-    </div>
+    <div id="curveContent"></div>
   </div>
 
   <script>
-    window.onload = updateCurveTypes;
+    window.onload = function () {
+      populateCurveDropdown();
+      resetCurveGroup();
+    };
+
 
     // Get the last modified time of the PAVE.exe file used by the website
     window.addEventListener("DOMContentLoaded", () => {
@@ -163,63 +152,26 @@
       selectedDate = e.target.value;
     });
 
-    // Defines curve types
-    const curveTypes = {
-      Findur: {
-        'Swap & Bond': ['Swap & Bond'],
-        'CDS': ['CDS'],
-        'CDX': ['CDX'],
-        'CPI': ['CPI'],
-        'IRPDF': ['IRPDF'],
-        'Data Container': ['Data Container']
-      },
-      ALM: []
-    };
+    const irpdfNames = new Set([
+      'FX_JPY.USD', 'FX_USD.AUD'
+    ]);
 
-    // Update page if curve source (Findur or ALM) changes
-    document.getElementById('curveSource').addEventListener('change', () => {
-      resetCurveGroup();
-    });
+    const dataContainerNames = new Set([
+      'BOND_PRICES.CAD', 'BOND_PRICES.JPY', 'BOND_PRICES.USD',
+      'MarketPX.CAD', 'MarketPX.JPY', 'MarketPX.USD',
+      'FX_CAD.USD', 'FX_JPY.USD', 'FX_SGD.USD', 'FX_USD.AUD',
+      'FX_USD.EUR', 'FX_USD.GBP', 'FX_USD.NZD',
+      'IBOXUSHY.USD', 'MFCPRIndx.CAD'
+    ]);
 
-    // Update dropdown display of curves depending on curve class selected
-    // Displays Swap & Bond, CDS & CDX, CPI options if selected Findur
-    function updateCurveTypes() {
-      const source = document.getElementById('curveSource').value;
-      const container = document.getElementById('curveTypeContainer');
-      container.innerHTML = '';
-
-      if (source === 'Findur') {
-        Object.keys(curveTypes.Findur).forEach((type, index) => {
-          const label = document.createElement('label');
-          label.style.display = 'block';
-          label.innerHTML = `
-        <input type="radio" name="curveType" value="${type}" ${index === 0 ? 'checked' : ''} />
-        ${type}
-      `;
-          container.appendChild(label);
-        });
-      }
-
-      populateCurveDropdown();
-      // when curve type changes
-      document.querySelectorAll('input[name="curveType"]').forEach(input => {
-        input.addEventListener('change', () => {
-          resetCurveGroup(); // clear selected curves
-          populateCurveDropdown(); // refresh dropdown
-        })
-      });
-    }
+    const CPINames = new Set(['CPI.CAD', 'CPI.USD']);
 
     // Populates dropdown menu with list of all curves for specific curve class
     function populateCurveDropdown() {
-      const source = document.getElementById('curveSource').value;
-      const type = getSelectedCurveType();
-      console.log(type);
       const curveSelect = document.getElementById('curveSelect');
-
       curveSelect.innerHTML = '';
 
-      fetch(`/api/curve-manager/all-curve-names?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
+      fetch(`/api/curve-manager/all-curve-names`)
         .then(res => res.json())
         .then(curves => {
           curves.forEach(name => {
@@ -260,8 +212,6 @@
     // Fetch quotes data for all curves in curve class and run PAVE
     async function runAllCurves() {
       const date = document.getElementById('curveDate').value;
-      const source = document.getElementById('curveSource').value;
-      const type = getSelectedCurveType();
       const curveContent = document.getElementById('curveContent');
 
       if (!date) {
@@ -273,7 +223,7 @@
 
       try {
         // Step 1: Get all curve names
-        const res = await fetch(`/api/curve-manager/all-curve-names?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`);
+        const res = await fetch(`/api/curve-manager/all-curve-names`);
         const allCurves = await res.json();
         console.log(allCurves);
 
@@ -281,14 +231,14 @@
         await fetch('/api/curve-manager/generate-selected-curves-def', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ curves: allCurves, source, type })
+          body: JSON.stringify({ curves: allCurves })
         });
 
         // Step 3: Run Python script to generate quotes
         const quotesRes = await fetch('/api/curve-manager/generate-quotes', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ date, source, type })
+          body: JSON.stringify({ date })
         });
 
         const data = await quotesRes.json();
@@ -303,7 +253,7 @@
         const paveRes = await fetch('/api/run-pave', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ valuationDate: date, source, type })
+          body: JSON.stringify({ valuationDate: date })
         });
 
         const paveResults = await paveRes.json();
@@ -363,9 +313,6 @@
     function getQuotesData() {
       document.getElementById('loadingMessage').classList.remove('hidden');
       const date = document.getElementById('curveDate').value;
-      const source = document.getElementById('curveSource').value;
-      console.log(source);
-      const type = getSelectedCurveType();
 
       if (!date) {
         alert('Please enter a valuation date.');
@@ -376,7 +323,7 @@
       fetch('/api/curve-manager/generate-quotes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date, source, type })
+        body: JSON.stringify({ date })
       })
         .then(res => res.json())
         .then(data => {
@@ -392,7 +339,7 @@
           const selectedCurvesDiv = document.getElementById('selectedCurves');
           selectedCurvesDiv.innerHTML = '';
 
-          fetch(`/api/curve-manager/quotes-curve-list?source=${source}`)
+          fetch(`/api/curve-manager/quotes-curve-list`)
             .then(res => res.json())
             .then(data => {
               const curves = data.curves || [];
@@ -400,7 +347,12 @@
               curves.forEach(name => {
                 const div = document.createElement('div');
                 div.className = 'curve-item';
-                const showDefinitionButton = source !== 'ALM';
+
+                const ALMNames = new Set([
+                  'USD_Public_BB', 'Treasury_USD'
+                ]);
+                const showDefinitionButton = !ALMNames.has(name);
+
                 div.innerHTML = `
               <div style="margin-top: 5px; margin-bottom: 5px;">
                 <strong>${name}</strong><br/>
@@ -412,16 +364,13 @@
                       class="whitespace-nowrap flex items-center h-8 px-4 font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
                       View Definition
                     </button>` : ''}
-                    <button type="button"
-                      onclick="${getSelectedCurveType() === 'CPI'
-                    ? `viewCPIQuotes('${name}')`
-                    : (getSelectedCurveType() === 'Data Container' || getSelectedCurveType() === 'IRPDF')
-                      ? `viewDataContainerIRPDFQuotes('${name}')`
-                      : `viewSwapBondQuotes('${name}')`
-                  }"
-                      class="whitespace-nowrap flex items-center h-8 px-4 font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
-                      Edit Quotes
-                    </button>
+                    <button
+  type="button"
+  onclick="handleEditQuotes('${name}')"
+  class="whitespace-nowrap flex items-center h-8 px-4 font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+>
+  Edit Quotes
+</button>
                   </nav>
                 </div>
                 <div id="parents-${name}" style="margin-top: 5px; font-size: 0.9em; color: #555;"></div>
@@ -430,7 +379,7 @@
                 selectedCurvesDiv.appendChild(div);
 
                 // Fetch and display parent curves
-                fetch(`/api/curve-manager/parents/${name}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
+                fetch(`/api/curve-manager/parents/${name}`)
                   .then(res => res.json())
                   .then(data => {
                     const parentText = data.parents?.length
@@ -455,6 +404,16 @@
         });
     }
 
+    function handleEditQuotes(name) {
+      if (CPINames.has(name)) {
+        viewCPIQuotes(name);
+      } else if (dataContainerNames.has(name) || irpdfNames.has(name)) {
+        viewDataContainerIRPDFQuotes(name);
+      } else {
+        viewSwapBondQuotes(name);
+      }
+    }
+
     // Updates CDef_CurveManager.txt with each curve user selects
     function updateSelected() {
       const selected = Array.from(curveSelect.selectedOptions).map(opt => opt.value);
@@ -463,13 +422,11 @@
       document.getElementById('selectedCurveList').textContent = Array.from(selectedCurves).join(', ');
 
       const curves = Array.from(selectedCurves);
-      const source = document.getElementById('curveSource').value;
-      const type = document.querySelector('input[name="curveType"]:checked')?.value || '';
 
       fetch('/api/curve-manager/generate-selected-curves-def', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ curves, source, type })
+        body: JSON.stringify({ curves })
       })
         .then(res => res.json())
         .then(data => {
@@ -480,18 +437,9 @@
         });
     }
 
-    // Returns user's selected curve type (Swap & Bond, CDS & CDX, CPI)
-    function getSelectedCurveType() {
-      const selected = document.querySelector('input[name="curveType"]:checked');
-      return selected ? selected.value : '';
-    }
-
     // Display curve's definition file
     function viewDefinition(curveName) {
-      const type = getSelectedCurveType();
-      const source = document.getElementById('curveSource').value; // Findur or ALM
-
-      fetch(`/api/curve-manager/definition/${curveName}?type=${encodeURIComponent(type)}&source=${encodeURIComponent(source)}`)
+      fetch(`/api/curve-manager/definition/${curveName}`)
         .then(res => res.text())
         .then(data => {
           curveContent.innerHTML = `<h3 class="text-lg font-semibold text-gray-800 mb-2">${curveName} - Definition</h3><pre>${data}</pre>`;
@@ -500,13 +448,14 @@
 
     // Fetch quotes data for curve and displays in editable table format
     function viewSwapBondQuotes(curveName) {
-      const isALM = document.getElementById('curveSource').value === 'ALM';
-      const source = document.getElementById('curveSource').value; // Findur or ALM
-      const type = getSelectedCurveType(); // Swap & Bond, CDS, CDX, etc.
+      const ALMNames = new Set([
+        'USD_Public_BB', 'Treasury_USD'
+      ]);
+      const isALM = ALMNames.has(curveName);
       pendingUpdates = [];
 
       Promise.all([
-        fetch(`/api/curve-manager/quotes/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`).then(res => res.text()),
+        fetch(`/api/curve-manager/quotes/${curveName}`).then(res => res.text()),
         fetch(`/api/curve-manager/original-quotes/${curveName}`).then(res => res.text())
       ]).then(([editableData, originalData]) => {
 
@@ -674,11 +623,9 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
     // Display quotes table for Data Container curves
     function viewDataContainerIRPDFQuotes(curveName) {
       pendingUpdates = [];
-      const source = document.getElementById('curveSource').value; // Findur or ALM
-      const type = getSelectedCurveType(); // Swap & Bond, CDS, CDX, etc.
 
       Promise.all([
-        fetch(`/api/curve-manager/quotes/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`).then(res => res.text()),
+        fetch(`/api/curve-manager/quotes/${curveName}`).then(res => res.text()),
         fetch(`/api/curve-manager/original-quotes/${curveName}`).then(res => res.text())
       ]).then(([editableData, originalData]) => {
         console.log(originalData);
@@ -955,7 +902,10 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
           const tenor = cells[1].innerText.trim();
           const isParent = curve !== sourceCurve;
 
-          const isALM = document.getElementById('curveSource').value === 'ALM';
+          const ALMNames = new Set([
+            'USD_Public_BB', 'Treasury_USD'
+          ]);
+          const isALM = ALMNames.has(curve);
           // ALM Curves: Convert Spread to MktSpread for editing backend file
           const normalizedField = isALM && field === 'Spread' ? 'MktSpread' : field;
           let targetCell = Array.from(row.querySelectorAll('td')).find(td => td.getAttribute('data-field') === field);
@@ -1043,13 +993,11 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
 
       const curves = Array.from(selectedCurves);
       const valuationDate = document.getElementById('curveDate').value;
-      const source = document.getElementById('curveSource').value; // Findur or ALM
-      const type = getSelectedCurveType(); // Swap & Bond, CDS, CDX, etc.
 
       fetch('/api/run-pave', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ curves, valuationDate, source, type })
+        body: JSON.stringify({ curves, valuationDate })
       })
         .then(res => res.json())
         .then(results => {
@@ -1063,6 +1011,9 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
     </a>
     <a href="/api/curve-manager/download/curveManagerQuotes" download>
       <button class="blue-button mt-2 mb-2">Download Quotes</button>
+    </a>
+    <a href="/api/curve-manager/download/curveManagerDef" download>
+      <button class="blue-button mt-2 mb-2">Download Definitions</button>
     </a>
     <a href="/api/curve-manager/download/debug" download>
       <button class="blue-button mt-2 mb-2">Download Debug.txt</button>

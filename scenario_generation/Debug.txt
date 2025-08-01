@@ -1,38 +1,19 @@
-DebugInfo started at Tue Jul 22 10:19:26 2025
-DebugInfo printed at Tue Jul 22 10:19:27 2025
+DebugInfo started at Thu Jul 31 15:19:29 2025
+DebugInfo printed at Thu Jul 31 15:19:29 2025
 
 INFO: Bootstrapping module starts ...
 Input Path = 	.\
 Executable = 	..\Dll_Exe_file\PAVE.exe
 
 Start building curve data ...
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 2638 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 3733 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 5560 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 7386 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 11038 compromised with BestSoFar -nan(ind) due to Max IterationReached
 Setting up curve data complete!
 
-DebugInfo printed at Tue Jul 22 10:19:29 2025
+DebugInfo printed at Thu Jul 31 15:19:29 2025
 
 Start building scenario curves ...
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 2638 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 3733 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 5560 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 7386 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 11038 compromised with BestSoFar -nan(ind) due to Max IterationReached
 INFO: ScenarioGenerator: Grid-BaseCase
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 2638 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 3733 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 5560 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 7386 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 11038 compromised with BestSoFar -nan(ind) due to Max IterationReached
+INFO: ScenarioGenerator: Grid-Down100
 INFO: ScenarioGenerator: Grid-Up100
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 2638 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 3733 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 5560 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 7386 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: Failure ALERT! SURV_ISLAM_SNRFOR_CR14_100BP.USD at offset 11038 compromised with BestSoFar -nan(ind) due to Max IterationReached
-INFO: ScenarioGenerator used 1250 ms
+INFO: ScenarioGenerator used 27 ms
 Setting Scenario curves complete!
 

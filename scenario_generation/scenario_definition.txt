@@ -2,10 +2,10 @@
 GridSurfaceName	ALM_QIS_DV01
 ///:Parameters
 IRDataType	bps
-IRRiskFactors	3m:6m:1y:2y:3y:5y:7y:10y:20y:30y
+IRRiskFactors	3mSurv:6mSurv:1ySurv:2ySurv:3ySurv:5ySurv:7ySurv:10ySurv:20ySurv:30ySurv
 IRShockAmt	0.001
 GreekOff	true
 
-///:GridName	CurveName	3m	6m	1y	2y	3y	5y	7y	10y	20y	30y
-BaseCase	ALL	0	0	0	0	0	0	0	0	0	0
-Up100	ALL	100	100	100	100	100	100	100	100	100	100
+///:GridName	3mSurv	6mSurv	1ySurv	2ySurv	3ySurv	5ySurv	7ySurv	10ySurv	20ySurv	30ySurv
+BaseCase	0	0	0	0	0	0	0	0	0	0
+Up	100	100	100	100	100	100	100	100	100	100

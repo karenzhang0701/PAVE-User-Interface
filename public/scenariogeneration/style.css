@@ -129,6 +129,17 @@ pre {
   display: block;
 }
 
+.output-heading {
+  font-size: 1.2rem;
+  /* text-base */
+  font-weight: 700;
+  /* font-bold */
+  color: #090909;
+  /* text-gray-700 */
+  /* mb-2 */
+  display: block;
+}
+
 .heading-xl {
   font-size: 1.25rem;
   /* text-xl */

@@ -14,7 +14,8 @@
     "express": "^5.1.0",
     "fs-extra": "^11.3.0",
     "node-fetch": "^3.3.2",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

@@ -40,19 +40,6 @@
         </div>
       </div>
 
-      <!-- Curve Type -->
-      <div class="mb-6">
-        <label for="curveSource">
-          <span class="quote-heading">Curve Class</span>
-          <select name="curveSource" id="curveSource" onchange="updateCurveTypes()"
-            class="mt-0.5 mb- w-auto rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-00 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
-            <option value="Findur">Findur Derivative Valuation Curves</option>
-            <option value="ALM">ALM Customized Curves</option>
-          </select>
-        </label>
-        <div id="curveTypeContainer" class="mt-2 space-y-1"></div>
-      </div>
-
       <div id="curveControls">
         <div class="mb-6">
           <label class="quote-heading mt-4">Select Curve Group</label>
@@ -85,19 +72,19 @@
               <button onclick="getQuotesData()" class="flex-1 w-auto green-button text-gray-700 text-sm py-2 rounded">
                 Get Quotes Data
               </button>
-              <button id="resetCurveGroup" class="gray-button" onclick="resetCurveGroup()">Reset</button>
+              <button id="resetCurveGroup" class="gray-button" onclick="resetCurveGroup()">Clear Curves</button>
             </div>
             <div id="loadingMessage" class="text-green-600 text-sm mt-1 hidden">Getting data...</div>
 
             <!--Displays user's selected curves for viewing definition and editing quotes-->
-            <div id="selectedCurves" class="space-y-2 mt-4"></div>
+            <div id="selectedCurves" class="space-y-2 mt-4" style="display: block;"></div>
           </div>
         </div>
 
         <div id="shockOptions" style="display: block;">
           <div id="standardShock" style="display: block;">
             <!-- Shock All Button -->
-            <button onclick="shockAll()" class="green-button mb-2" style="min-width: 150px;">Shock All</button>
+            <button onclick="shockAll()" class="green-button mb-2" style="min-width: 245px;">Define Scenarios</button>
 
             <!-- Advanced Settings Toggle -->
             <div>
@@ -115,7 +102,7 @@
               <!-- Shock By Curve Type Option -->
               <div id="shockCurveTypeContainer" style="display: flex; align-items: center; margin-bottom: 12px;">
                 <label style="min-width: 120px; color: rgb(143, 143, 143);">
-                  <input type="radio" name="shockBy" value="type" onchange="handleShockByChange()"> Curve Type
+                  <input type="radio" name="shockBy" value="type" onchange="proceedToScenario()"> Curve Type
                 </label>
                 <div id="curveTypeSection" style="display: none; margin-left: 12px;">
                   <label for="curveTypeSelect" style="margin-right: 8px; color: rgb(143, 143, 143);">Select
@@ -124,6 +111,7 @@
                     onchange="proceedToScenario()">
                     <option value="Bond">Bond</option>
                     <option value="YieldCurve">YieldCurve</option>
+                    <option value="Surv">Surv</option>
                   </select>
                 </div>
               </div>
@@ -131,35 +119,18 @@
               <!-- Shock By Curve Name Option -->
               <div id="shockByNameContainer" style="display: flex; align-items: center; margin-bottom: 12px;">
                 <label style="min-width: 120px; color: rgb(143, 143, 143);">
-                  <input type="radio" name="shockBy" value="name" onchange="handleShockByChange()"> Curve Name
+                  <input type="radio" name="shockBy" value="name" onchange="proceedToScenario()"> Curve Name
                 </label>
                 <div id="curveNameSection" style="display: none; margin-left: 12px;">
-                  <label for="curveNameSelect" style="margin-right: 8px; color: rgb(143, 143, 143);">Select
-                    Curve:</label>
-                  <select id="curveNameSelect" class="rounded-dropdown" style="color: rgb(143, 143, 143);"
-                    onchange="proceedToScenario()"></select>
+                  <label for="curveNameSelect"
+                    style="margin-right: 8px; color: rgb(143, 143, 143); font-weight: bold;">Select
+                    Curves:</label>
+                  <div id="curveNameChecklist"
+                    style="color: rgb(143, 143, 143); display: flex; flex-direction: column; gap: 4px;"></div>
                 </div>
               </div>
             </div>
           </div>
-
-          <!--Shock By Curve Name Button, only displayed for data container curves-->
-          <div id="dataContainerShockOptions" style="display: none;">
-            <div id="dataContainerShockByName" style="display: flex; align-items: center; margin-bottom: 12px;">
-              <label style="min-width: 120px; color: rgb(18, 18, 18);">
-                <button id="shockByCurveNameBtn" type="button" class="green-button" onclick="shockByCurveNameBtn()">
-                  Shock By Curve Name</button>
-              </label>
-              <div id="curveNameSectionDC" style="display: none; margin-left: 20px;">
-                <label for="curveNameSelectDC"
-                  style="margin-right: 8px; color: rgb(18, 18, 18); font-weight: bold;">Select
-                  Curve:</label>
-                <select id="curveNameSelectDC" class="rounded-dropdown" style="color: rgb(18, 18, 18);"
-                  onchange="proceedToScenario()"></select>
-              </div>
-            </div>
-          </div>
-
         </div>
 
         <div id="selectedCurves"></div>
@@ -169,9 +140,7 @@
   </div>
 
   <div id="main">
-    <div id="curveContent" class="ml-4">
-      <p>Select curve group and add scenarios</p>
-    </div>
+    <div id="curveContent" class="ml-4"></div>
   </div>
 
   <script>
@@ -210,26 +179,14 @@
     const selectedCurves = new Set(); // tracks selected curves
     let pendingUpdates = []; // stores scenario form edits
     let missingCurves = []; // curves with no quotes data
+    let shockByCurveNameSet = new Set(); // selected curves for shock by curve name
 
     const curveSubsetSelect = document.getElementById('curveSubsetSelect'); // dropdown menu of curves
 
-    const curveTypes = {
-      Findur: {
-        'Swap & Bond': ['Swap & Bond'],
-        'CDS': ['CDS'],
-        'CDX': ['CDX'],
-        'CPI': ['CPI'],
-        'IRPDF': ['IRPDF'],
-        'Data Container': ['Data Container']
-      },
-      ALM: []
-    };
-    window.onload = updateCurveTypes;
-
-    // Update page if curve source (Findur or ALM) changes
-    document.getElementById('curveSource').addEventListener('change', () => {
+    window.onload = function () {
       resetCurveGroup();
-    });
+      populateCurveDropdown();
+    }
 
     // Store user's input date
     let selectedDate = ''
@@ -237,134 +194,107 @@
       selectedDate = e.target.value;
     });
 
-    // Get user's selected curve type (Findur, ALM, etc)
-    function getSelectedCurveType() {
-      const selected = document.querySelector('input[name="curveType"]:checked');
-      return selected ? selected.value : '';
-    }
+    const irpdfNames = new Set([
+      'FX_JPY.USD', 'FX_USD.AUD'
+    ]);
 
-    // Activates shock by curve name button for data container curves
-    function shockByCurveNameBtn() {
-      // Set the shockBy radio button value to 'name'
-      const existing = document.querySelector('input[name="shockBy"][value="name"]');
-      if (existing) {
-        existing.checked = true;
-      }
+    const dataContainerNames = new Set([
+      'BOND_PRICES.CAD', 'BOND_PRICES.JPY', 'BOND_PRICES.USD',
+      'MarketPX.CAD', 'MarketPX.JPY', 'MarketPX.USD',
+      'FX_CAD.USD', 'FX_JPY.USD', 'FX_SGD.USD', 'FX_USD.AUD',
+      'FX_USD.EUR', 'FX_USD.GBP', 'FX_USD.NZD',
+      'IBOXUSHY.USD', 'MFCPRIndx.CAD'
+    ]);
 
-      handleShockByChange();
+    const CPINames = new Set(['CPI.CAD', 'CPI.USD']);
 
-      // Show the shock by curve name select curve dropdown
-      const section = document.getElementById('curveNameSectionDC');
-      if (section) {
-        section.style.display = 'flex';
-      }
-    }
+    let IRRiskFactors = '';
+    let EQRiskFactors = '';
 
-    // Display shock options for data container curves vs. other curves
-    // Data container curves can only shock by curve name
-    function updateShockOptionsVisibility() {
-      const selectedType = getSelectedCurveType();
-      const shockOptions = document.getElementById('shockOptions');
-      const standardShock = document.getElementById('standardShock');
-      const dataContainerShockOptions = document.getElementById('dataContainerShockOptions');
+    // Populates curve name options for shock by curve name
+    function populateCurveChecklist(curveNames) {
+      shockByCurveNameSet.clear();
+      const checklistContainer = document.getElementById('curveNameChecklist');
+      checklistContainer.innerHTML = '';
 
-      if (selectedType === 'Data Container') {
-        standardShock.style.display = 'none';
-        dataContainerShockOptions.style.display = 'block';
-      } else {
-        standardShock.style.display = 'block';
-        dataContainerShockOptions.style.display = 'none';
-      }
-    }
+      curveNames.forEach(name => {
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '6px';
 
-    // Update dropdown display of curves depending on curve class selected
-    // Displays Swap & Bond, CDS & CDX, CPI options if selected Findur
-    function updateCurveTypes() {
-      const source = document.getElementById('curveSource').value;
-      const container = document.getElementById('curveTypeContainer');
-      const curveTypeSelect = document.getElementById('curveTypeSelect');
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.value = name;
+        checkbox.onchange = (event) => {
+          const isChecked = event.target.checked;
 
-      container.innerHTML = '';
-
-      if (source === 'Findur') {
-        Object.keys(curveTypes.Findur).forEach((type, index) => {
-          const label = document.createElement('label');
-          label.style.display = 'block';
-          label.innerHTML = `
-        <input type="radio" name="curveType" value="${type}" ${index === 0 ? 'checked' : ''} />
-        ${type}
-      `;
-          container.appendChild(label);
-        });
-      }
-
-      // Update SHOCK BY CURVE TYPE dropdown options depending on curve class
-      shockByCurveTypeOptions();
-
-      populateCurveDropdown();
-
-      // when curve type changes
-      document.querySelectorAll('input[name="curveType"]').forEach(input => {
-        input.addEventListener('change', () => {
-          resetCurveGroup(); // clear selected curves
-          populateCurveDropdown(); // refresh dropdown
-          shockByCurveTypeOptions(); // refresh shock by curve type options
-          updateShockOptionsVisibility();
-
-          // Don't show Shock By Curve Type option for CPI curves
-          const curveType = input.value;
-          const shockCurveTypeContainer = document.getElementById('shockCurveTypeContainer');
-          if (shockCurveTypeContainer) {
-            shockCurveTypeContainer.style.display = curveType === 'CPI' ? 'none' : 'flex';
+          if (isChecked && shockByCurveNameSet.size >= 3) {
+            event.target.checked = false;
+            alert('⚠️ Select 3 curves maximum');
+            return;
           }
-        })
+
+          if (isChecked) {
+            shockByCurveNameSet.add(name);
+          } else {
+            shockByCurveNameSet.delete(name);
+          }
+
+          fetch('/api/scenario-generation/tenors', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ curves: Array.from(shockByCurveNameSet), shock: 'Curve Name' })
+          })
+            .then(res => res.json())
+            .then(data => {
+              console.log(data.curves);
+
+              // Put IR curves before EQ
+              const orderedCurves = [
+                ...data.curves.filter(curve => curve.type === 'IR'),
+                ...data.curves.filter(curve => curve.type === 'EQ')
+              ];
+
+              // Separate IR and EQ tenors
+              const IR = [];
+              const EQ = [];
+
+              data.curves.forEach(curve => {
+                if (curve.type === 'IR') {
+                  IR.push(...curve.tenors);
+                } else if (curve.type === 'EQ') {
+                  EQ.push(...curve.tenors);
+                }
+              });
+
+              // Join risk factors
+              IRRiskFactors = IR.join(':');
+              EQRiskFactors = EQ.join(':');
+
+              // Ensure IR tenors come first
+              const allTenors = [...IR, ...EQ];
+              console.log("ORDERED CURVES");
+              console.log(orderedCurves);
+              renderScenarioForm('Curve Name', '', '', allTenors);
+              renderGridPointScenarioForm('name', orderedCurves);
+            });
+        }
+
+        label.appendChild(checkbox);
+        label.appendChild(document.createTextNode(name));
+        checklistContainer.appendChild(label);
       });
     }
 
-    // Updates options for Shock By Curve Type depending on curve class
-    function shockByCurveTypeOptions() {
-      const source = document.getElementById('curveSource').value;
-      const curveTypeSelect = document.getElementById('curveTypeSelect');
-      const curveTypeInput = document.querySelector('input[name="curveType"]:checked');
-      const curveType = curveTypeInput ? curveTypeInput.value : null;
-      const curveTypeSection = document.getElementById('curveTypeSection');
-
-      if (curveTypeSelect) {
-        curveTypeSelect.innerHTML = '';
-        if (source === 'ALM') {
-          curveTypeSelect.innerHTML = `
-        <option value="RiskFree">RiskFree</option>
-        <option value="CreditSpread">CreditSpread</option>
-      `;
-        } else if (source === 'Findur' && (curveType === 'CDS' || curveType === 'CDX')) {
-          curveTypeSelect.innerHTML = `
-        <option value="YieldCurve">YieldCurve</option>
-        <option value="Surv">Surv</option>
-      `;
-        } else if (source === 'Findur' && curveType === 'IRPDF') {
-          curveTypeSelect.innerHTML = `
-        <option value="YieldCurve">YieldCurve</option>
-        <option value="FXForward">FXForward</option>
-      `;
-        } else {
-          curveTypeSelect.innerHTML = `
-        <option value="Bond">Bond</option>
-        <option value="YieldCurve">YieldCurve</option>
-      `;
-        }
-      }
-    }
 
     // Populates dropdown with list of all curves for specific curve class
     function populateCurveDropdown() {
-      const source = document.getElementById('curveSource').value;
-      const type = document.querySelector('input[name="curveType"]:checked')?.value || '';
-
       const curveSelect = document.getElementById('curveSubsetSelect');
 
       curveSelect.innerHTML = '';
 
-      fetch(`/api/scenario-generation/all-curve-names?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
+      fetch(`/api/scenario-generation/all-curve-names`)
         .then(res => res.json())
         .then(curves => {
           curves.forEach(name => {
@@ -386,13 +316,11 @@
       document.getElementById('selectedCurveList').textContent = Array.from(selectedCurves).join(', ');
 
       const curves = Array.from(selectedCurves);
-      const source = document.getElementById('curveSource').value;
-      const type = document.querySelector('input[name="curveType"]:checked')?.value || '';
 
       fetch('/api/scenario-generation/generate-selected-curves-def', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ curves, source, type })
+        body: JSON.stringify({ curves })
       })
         .then(res => res.json())
         .then(data => {
@@ -419,9 +347,15 @@
       document.getElementById("selectedCurves").innerHTML = "";
       document.getElementById("selectedCurveList").innerHTML = "";
       document.getElementById("curveContent").innerHTML = "";
-      selectedCurves.clear(); // clear list of selected curves
-      shockByCurveTypeOptions(); // change shock by curve type options based on curve class
-      const advancedSettings = document.getElementById('advancedSettings'); // hide advanced settings
+      selectedCurvesDiv.style.display = 'block';
+
+      selectedCurves.clear();
+      shockByCurveNameSet.clear();
+
+      const advancedOptions = document.querySelectorAll('input[name="shockBy"]');
+      advancedOptions.forEach(option => option.checked = false);
+
+      const advancedSettings = document.getElementById('advancedSettings');
       advancedSettings.style.display = 'none';
 
       fetch('/api/scenario-generation/clear-curve-files', {
@@ -450,30 +384,72 @@
     // Display scenario from when user clicks 'Shock All' button
     function shockAll() {
       currentShockBy = 'ALL';
-      document.getElementById('curveTypeSection').style.display = 'none';
-      document.getElementById('curveNameSection').style.display = 'none';
-      openScenarioForm('ALL');
+      shockByCurveNameSet.clear();
+      selectedCurvesDiv.style.display = 'none';
+      const advancedOptions = document.querySelectorAll('input[name="shockBy"]');
+      advancedOptions.forEach(option => option.checked = false);
+
+      // Separate IR and EQ curves
+      const IR_Curves = [];
+      const EQ_Curves = [];
+
+      selectedCurves.forEach(curve => {
+        if (!dataContainerNames.has(curve)) {
+          IR_Curves.push(curve);
+        } else {
+          EQ_Curves.push(curve);
+        }
+      })
+
+      const curvesToSend = [...EQ_Curves];
+      if (IR_Curves.length > 0) {
+        curvesToSend.push('Selected IR Curves');
+      }
+
+      // Get gridpoints and bucket tenors for selected curves
+      fetch('/api/scenario-generation/tenors', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ curves: curvesToSend, shock: 'ALL' })
+      })
+        .then(res => res.json())
+        .then(data => {
+          console.log(data.curves);
+
+          // Put IR curves before EQ
+          const orderedCurves = [
+            ...data.curves.filter(curve => curve.type === 'IR'),
+            ...data.curves.filter(curve => curve.type === 'EQ')
+          ];
+
+          // Separate IR and EQ tenors
+          const IR = [];
+          const EQ = [];
+
+          data.curves.forEach(curve => {
+            if (curve.type === 'IR') {
+              IR.push(...curve.tenors);
+            } else if (curve.type === 'EQ') {
+              EQ.push(...curve.tenors);
+            }
+          });
+
+          // Join risk factors
+          IRRiskFactors = IR.join(':');
+          EQRiskFactors = EQ.join(':');
+
+          // Ensure IR tenors come first
+          const allTenors = [...IR, ...EQ];
+
+          renderScenarioForm('ALL', '', '', allTenors);
+          renderGridPointScenarioForm('ALL', orderedCurves);
+        });
     }
-
-    // Show further options for Shock By Curve Type and Shock By Curve Name
-    function handleShockByChange() {
-      const selected = document.querySelector('input[name="shockBy"]:checked').value;
-
-      document.getElementById('curveTypeSection').style.display = selected === 'type' ? 'block' : 'none';
-      document.getElementById('curveNameSection').style.display = selected === 'name' ? 'block' : 'none';
-      document.getElementById('curveNameSectionDC').style.display = selected === 'name' ? 'block' : 'none';
-
-      // Automatically proceed to scenario form
-      proceedToScenario();
-    }
-
 
     // Fetch quotes data for selected curves and display view definition, edit quotes options for each curve
     function getQuotesData() {
       document.getElementById('loadingMessage').classList.remove('hidden');
       const date = document.getElementById('curveDate').value;
-      const source = document.getElementById('curveSource').value;
-      const type = getSelectedCurveType();
 
       if (!date) {
         alert('Please enter a valuation date.');
@@ -484,7 +460,7 @@
       fetch('/api/scenario-generation/generate-quotes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ date, source, type })
+        body: JSON.stringify({ date })
       })
         .then(res => res.json())
         .then(data => {
@@ -502,33 +478,27 @@
             .then(res => res.json())
             .then(data => {
               const curves = data.curves || [];
-              // console.log(curves);
 
               curves.forEach(name => {
                 const div = document.createElement('div');
                 div.className = 'curve-item';
-                const showDefinitionButton = source !== 'ALM';
                 div.innerHTML = `
               <div style="margin-top: 5px; margin-bottom: 5px;">
                 <strong>${name}</strong><br/>
                 <div class="flex mt-2">
                   <nav class="flex overflow-x-auto items-center p-1 space-x-1 text-sm text-gray-600 bg-gray-100 rounded-xl">
-                    ${showDefinitionButton ? `
                     <button type="button"
                       onclick="viewDefinition('${name}')"
                       class="whitespace-nowrap flex items-center h-8 px-4 font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
                       View Definition
-                    </button>` : ''}
-                    <button type="button"
-                      onclick="${getSelectedCurveType() === 'CPI'
-                    ? `viewCPIQuotes('${name}')`
-                    : (getSelectedCurveType() === 'Data Container' || getSelectedCurveType() === 'IRPDF')
-                      ? `viewDataContainerIRPDFQuotes('${name}')`
-                      : `editSwapBondQuotes('${name}')`
-                  }"
-                      class="whitespace-nowrap flex items-center h-8 px-4 font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400">
-                      Edit Quotes
                     </button>
+                    <button
+  type="button"
+  onclick="handleEditQuotes('${name}')"
+  class="whitespace-nowrap flex items-center h-8 px-4 font-medium rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400"
+>
+  Edit Quotes
+</button>
                   </nav>
                 </div>
                 <div id="parents-${name}" style="margin-top: 5px; font-size: 0.9em; color: #555;"></div>
@@ -537,7 +507,7 @@
                 selectedCurvesDiv.appendChild(div);
 
                 // Fetch and display parent curves
-                fetch(`/api/scenario-generation/parents/${name}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
+                fetch(`/api/scenario-generation/parents/${name}`)
                   .then(res => res.json())
                   .then(data => {
                     const parentText = data.parents?.length
@@ -548,25 +518,7 @@
                   .catch(err => console.error(`Failed to fetch parents for ${name}:`, err));
               });
 
-              // Populate Shock By: Curve Name dropdown based on user's selected group of curves
-              const curveNameSelect = document.getElementById('curveNameSelect');
-              curveNameSelect.innerHTML = '';
-              curves.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                curveNameSelect.appendChild(option);
-              });
-
-              // Same thing as above for data container curve, shock by curve name option
-              const curveNameSelectDC = document.getElementById('curveNameSelectDC');
-              curveNameSelectDC.innerHTML = '';
-              curves.forEach(name => {
-                const option = document.createElement('option');
-                option.value = name;
-                option.textContent = name;
-                curveNameSelectDC.appendChild(option);
-              });
+              populateCurveChecklist(curves);
 
               document.getElementById('selectedCurveList').textContent = curves.join(', ');
             })
@@ -582,12 +534,20 @@
         });
     }
 
+    // Call corresponding editing quotes function depending on curve type
+    function handleEditQuotes(name) {
+      if (CPINames.has(name)) {
+        viewCPIQuotes(name);
+      } else if (dataContainerNames.has(name) || irpdfNames.has(name)) {
+        viewDataContainerIRPDFQuotes(name);
+      } else {
+        editSwapBondQuotes(name);
+      }
+    }
+
     // Display curve's definition file
     function viewDefinition(curveName) {
-      const source = document.getElementById('curveSource').value;
-      const type = getSelectedCurveType();
-
-      fetch(`/api/scenario-generation/definition/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
+      fetch(`/api/scenario-generation/definition/${curveName}`)
         .then(res => res.text())
         .then(data => {
           curveContent.innerHTML = `<h3 class="text-lg font-semibold text-gray-800 mb-2">${curveName} - Definition</h3><pre>${data}</pre>`;
@@ -609,14 +569,11 @@
     // Display quotes table for Data Container and IRPDF curves
     function viewDataContainerIRPDFQuotes(curveName) {
       pendingUpdates = [];
-      const source = document.getElementById('curveSource').value;
-      const type = getSelectedCurveType();
 
       Promise.all([
-        fetch(`/api/scenario-generation/quotes/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`).then(res => res.text()),
+        fetch(`/api/scenario-generation/quotes/${curveName}`).then(res => res.text()),
         fetch(`/api/scenario-generation/original-quotes/${curveName}`).then(res => res.text())
       ]).then(([editableData, originalData]) => {
-        // console.log(originalData);
         const parseCurveBlock = (data) => {
           const blocks = data.split('#BeginCurve').filter(Boolean);
           return blocks.map(block => {
@@ -658,7 +615,6 @@
           const key = generateRowKey(row);
           originalMap.set(key, row);
         });
-        // console.log(originalMap);
 
         const numericFields = new Set();
         targetBlock.rows.forEach(row => {
@@ -867,13 +823,14 @@
 
     // Allow user to edit rate and spread values in table format
     function editSwapBondQuotes(curveName) {
-      const isALM = document.getElementById('curveSource').value === 'ALM';
+      const ALMNames = new Set([
+        'USD_Public_BB', 'Treasury_USD'
+      ]);
+      const isALM = ALMNames.has(curveName);
       pendingUpdates = [];
-      const source = document.getElementById('curveSource').value;
-      const type = getSelectedCurveType();
 
       Promise.all([
-        fetch(`/api/scenario-generation/quotes/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`).then(res => res.text()),
+        fetch(`/api/scenario-generation/quotes/${curveName}`).then(res => res.text()),
         fetch(`/api/scenario-generation/original-quotes/${curveName}`).then(res => res.text())
       ]).then(([editableData, originalData]) => {
 
@@ -949,7 +906,6 @@
           const label = field === 'Rate' ? 'Rate (decimal)' : `${field} (bps)`;
           adjustFieldOptions += `<option value="${field}">${label}</option>`;
         });
-        // console.log(numericFields)
 
         let html = `
         <h3 class="text-lg font-semibold text-gray-800 mb-2">${curveName} - Quotes</h3>
@@ -1049,7 +1005,11 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
           const tenor = cells[1].innerText.trim();
           const isParent = curve !== sourceCurve;
 
-          const isALM = document.getElementById('curveSource').value === 'ALM';
+          const ALMNames = new Set([
+            'USD_Public_BB', 'Treasury_USD'
+          ]);
+          const isALM = ALMNames.has(curve);
+
           // ALM Curves: Convert Spread to MktSpread for editing backend file
           const normalizedField = isALM && field === 'Spread' ? 'MktSpread' : field;
           let targetCell = Array.from(row.querySelectorAll('td')).find(td => td.getAttribute('data-field') === field);
@@ -1093,8 +1053,6 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
       cell.style.backgroundColor = '#ffffcc';
     }
 
-
-    // Saves all changes to quotes file after user clicks save changes button
     // Saves quote data changes
     function saveAllChanges() {
       if (pendingUpdates.length === 0) {
@@ -1131,9 +1089,11 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
         });
     }
 
-    // Run PAVE on selected curves and scenarios
-    // Displays output and allows user to download
+    // Run PAVE
     function runSelectedCurves() {
+      const outputContainer = document.getElementById('scenarioOutputContainer');
+      outputContainer.innerHTML = '';
+
       if (!scenarioSaved) {
         alert('⚠️ Save scenario before running');
         return;
@@ -1141,30 +1101,36 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
 
       const curves = Array.from(selectedCurves);
       const valuationDate = document.getElementById('curveDate').value;
-      const type = getSelectedCurveType();
 
-      // Running... message
-      const linkContainer = document.getElementById('linkContainer');
-      const runningMsg = document.createElement('p');
-      runningMsg.id = 'runningMessage';
-      runningMsg.className = 'text-green-600 text-base mt-2';
-      runningMsg.textContent = 'Running...';
-      linkContainer.appendChild(runningMsg);
-
-      const source = document.getElementById('curveSource').value;
+      // Display Running message
+      const msg = document.getElementById('runningMessage');
+      if (msg) {
+        msg.textContent = 'Running...';
+      }
 
       fetch('/api/scenario-generation/run-scenario-generation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ valuationDate, source, type })
+        body: JSON.stringify({ valuationDate })
       })
         .then(res => res.json())
         .then(results => {
           scenarioSaved = false;
-          curveContent.innerHTML = `<h3 class="quote-heading">Output</h3>`;
+          document.getElementById('viewOutputBtn').style.display = 'block';
+          viewOutputBtn.onclick = () => {
+            document.getElementById('scenarioOutputContainer')?.scrollIntoView({ behavior: 'smooth' });
+          };
+
           if (Array.isArray(results) && results.length > 0) {
             const result = results[0];
-            curveContent.innerHTML += `
+            outputContainer.innerHTML += `
+  <hr class="h-4 border-gray-300 mb-4" />
+  <div class="flex items-center justify-between gap-6 mb-2">
+    <h2 class="output-heading">Output</h2>
+    <button id="backToScenarioBtn" class="text-blue-600 font-bold text-base underline hover:text-blue-800">
+      Back to Scenarios ↑
+    </button>
+  </div>
   <div class="flex gap-2 mb-6">
     <a href="/api/scenario-generation/download/scenarioOutput" download>
       <button class="blue-button mt-2 mb-2">Download Output</button>
@@ -1172,8 +1138,11 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
     <a href="/api/scenario-generation/download/scenarioQuotes" download>
       <button class="blue-button mt-2 mb-2">Download Quotes</button>
     </a>
-    <a href="/api/scenario-generation/download/debug" download>
-      <button class="blue-button mt-2 mb-2">Download Debug.txt</button>
+    <a href="/api/scenario-generation/download/curveDef" download>
+      <button class="blue-button mt-2 mb-2">Download Curve Def</button>
+    </a>
+    <a href="/api/scenario-generation/download/scenarioDefinition" download>
+      <button class="blue-button mt-2 mb-2">Download Scenario Def</button>
     </a>
   </div>
 
@@ -1200,6 +1169,12 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
     </div>
   </div>
 `;
+            setTimeout(() => {
+              document.getElementById('scenarioOutputContainer')?.scrollIntoView({ behavior: 'smooth' });
+            }, 0);
+            document.getElementById('backToScenarioBtn')?.addEventListener('click', () => {
+              document.getElementById('curveContent')?.scrollIntoView({ behavior: 'smooth' });
+            });
           } else {
             curveContent.innerHTML += `<p style="color: red;">⚠️ No scenario output returned.</p>`;
           }
@@ -1209,130 +1184,58 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
         });
     }
 
-    // Trigger scenario form based on selection
+    // Trigger scenario form based on shock type selection
     function proceedToScenario() {
+      selectedCurvesDiv.style.display = 'none';
       currentShockBy = document.querySelector('input[name="shockBy"]:checked').value;
-      let curveName = '';
+      const curveTypeShock = document.getElementById('curveTypeSelect').value;
+
+      document.getElementById('curveTypeSection').style.display = currentShockBy === 'type' ? 'block' : 'none';
+      document.getElementById('curveNameSection').style.display = currentShockBy === 'name' ? 'block' : 'none';
+
       if (currentShockBy === 'type') {
-        curveName = document.getElementById('curveTypeSelect').value;
-      } else if (currentShockBy === 'name') {
-        const standard = document.getElementById('curveNameSelect');
-        const dataContainer = document.getElementById('curveNameSelectDC');
-
-        if (dataContainer && dataContainer.offsetParent != null) {
-          curveName = dataContainer.value;
-        } else {
-          curveName = standard.value;
-        }
+        shockByCurveNameSet.clear();
+        IRRiskFactors = `3m${curveTypeShock}:6m${curveTypeShock}:1y${curveTypeShock}:2y${curveTypeShock}:3y${curveTypeShock}:5y${curveTypeShock}:7y${curveTypeShock}:10y${curveTypeShock}:20y${curveTypeShock}:30y${curveTypeShock}`;
+        renderScenarioForm(curveTypeShock, '', '', '');
+        renderGridPointScenarioForm(curveTypeShock, [{ name: "Curve Type", 
+        tenors: [`3m${curveTypeShock}`, `6m${curveTypeShock}`, `1y${curveTypeShock}`, `2y${curveTypeShock}`,
+          `3y${curveTypeShock}`, `5y${curveTypeShock}`, `7y${curveTypeShock}`, `10y${curveTypeShock}`,
+          `20y${curveTypeShock}`, `30y${curveTypeShock}`
+        ] }]);
+      } else if (currentShockBy === 'ALL') {
+        shockByCurveNameSet.clear();
       } else {
-        curveName = 'ALL';
+        renderScenarioForm('Curve Name', '', '', '');
       }
-      openScenarioForm(curveName);
-    }
-
-    // Generates scenario form
-    function openScenarioForm(curveName) {
-      const source = document.getElementById('curveSource').value;
-      const type = getSelectedCurveType();
-      const isShockByName = document.querySelector('input[name="shockBy"]:checked')?.value === 'name';
-
-      fetch(`/api/scenario-generation/parents/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
-        .then(res => res.json())
-        .then(data => {
-          const parentCurves = data.parents || [];
-          const childCurveName = curveName;
-          const shockMethodSelect = document.getElementById('shockMethodSelect');
-          const method = shockMethodSelect ? shockMethodSelect.value : 'tenor';
-
-          let curveCategory = '';
-          if (type === 'Data Container') {
-            fetch(`/api/scenario-generation/curve-category/${encodeURIComponent(curveName)}`)
-              .then(response => response.json())
-              .then(data => {
-                curveCategory = data.curveCategory;
-
-                const priceCurveWithTenor = type === 'Data Container' && (curveCategory == 'FXCurve' || curveCategory == 'ForwardPriceCurve');
-
-                if (isShockByName && priceCurveWithTenor) {
-                  fetch(`/api/scenario-generation/tenors/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
-                    .then(res => res.json())
-                    .then(data => {
-                      document.getElementById('tenorFormContainer').style.display = 'none';
-                      document.getElementById('gridFormContainer').style.display = 'block';
-                      renderGridPointScenarioForm(curveName, data.tenors);
-                      return;
-                    })
-                    .catch(err => {
-                      console.error('Failed to fetch tenors:', err);
-                      alert('Could not load tenors for grid point shock.');
-                    });
-                }
-                else if (isShockByName && parentCurves.length === 0 && type === 'Data Container') {
-                  fetch(`/api/scenario-generation/risk-factors/${curveName}`)
-                    .then(res => res.json())
-                    .then(data => {
-                      document.getElementById('tenorFormContainer').style.display = 'none';
-                      document.getElementById('gridFormContainer').style.display = 'block';
-                      renderGridPointScenarioForm(curveName, data.riskFactors);
-                      return;
-                    })
-                    .catch(err => {
-                      console.error('Failed to fetch risk factors:', err);
-                      alert('Could not load risk factors for grid point shock.');
-                    });
-                }
-              })
-              .catch(err => {
-                console.error("Error fetching curve category:", err);
-              })
-          } 
-          
-          renderScenarioForm(curveName, parentCurves, childCurveName);
-
-          // if (isShockByName && parentCurves.length === 0 && method === 'grid') {
-          //   fetch(`scenario-generation/tenors/${curveName}?source=${encodeURIComponent(source)}&type=${encodeURIComponent(type)}`)
-          //     .then(res => res.json())
-          //     .then(data => {
-          //       document.getElementById('tenorFormContainer').style.display = 'none';
-          //       document.getElementById('gridFormContainer').style.display = 'block';
-          //       renderGridPointScenarioForm(curveName, data.tenors);
-          //     })
-          //     .catch(err => {
-          //       console.error('Failed to fetch tenors:', err);
-          //       alert('Could not load tenors for grid point shock.');
-          //     });
-          // }
-        })
-        .catch(err => {
-          console.error('Failed to fetch parent curves:', err);
-        });
     }
 
     // Displays scenario form on frontend for user to edit
-    function renderScenarioForm(curveName, parentCurveName, childCurveName) {
+    function renderScenarioForm(curveName, parentCurveName, childCurveName, tenors) {
       const curveContent = document.getElementById('curveContent');
       const defaultRow = ['BaseCase', curveName, ...Array(10).fill('0')];
-      const hasSpecificCurveName = curveName && !['Curve Type', 'All'].includes(curveName);
 
-      // Show inheritance options if selected curve has parent curve
-      const showShockOptions = currentShockBy === 'name' && hasSpecificCurveName &&
-        Array.isArray(parentCurveName) && parentCurveName.length > 0;
+      let type = '';
+      const shockByText = curveName === 'ALL' ? 'Selected Curves' : curveName;
 
-      const type = getSelectedCurveType();
-      const shockVal = type === 'Data Container' ? '0.01' : '0.001';
+      // Shock By Curve Name: test if selected curves contains data container
+      const curveNameShockDC = containsDataContainer(dataContainerNames, shockByCurveNameSet);
 
-      const prefix = type === 'Data Container' ? 'EQ' : 'IR';
+      // Other Shocks (all, curve type): test if user's selected curves contain data container
+      const selectedCurvesDC = containsDataContainer(dataContainerNames, selectedCurves);
+      if (curveNameShockDC === "all" || selectedCurvesDC === "all") {
+        type = 'Data Container';
+      }
 
       let html = `
-    <h3 class="quote-heading">Shock By: ${curveName}</h3>
-    ${currentShockBy === 'name' ? `
-      <div id="parentCurvesLine" style="margin-bottom: 20px; font-size: 0.95em; color: #555;">
-        Parent Curves: ${Array.isArray(parentCurveName) && parentCurveName.length > 0 ? parentCurveName.join(', ') : 'None'}
-      </div>
-    ` : ''}
+      <div class="flex items-center justify-between gap-6 mb-4">
+    <h3 class="output-heading">Shock By: ${shockByText}</h3>
+    <button id="viewOutputBtn" class="text-blue-600 font-bold text-base underline hover:text-blue-800" style="display: none;">
+      View Output ↓
+    </button>
+  </div>
     <div style="display: flex; gap: 80px; margin-top: 10px; margin-bottom: 10px;">
       <div style="display: flex; flex-direction: column; gap: 10px;">
-        <label class="label-group">${prefix} Data Type:
+        <label class="label-group" id="irDataTypeContainer">IR Data Type:
           <select id="scenarioIRDataType" class="rounded-dropdown">
             <option value="bps">bps</option>
             <option value="decimal">decimal</option>
@@ -1344,6 +1247,12 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
             <option value="Spread">Spread</option>
           </select>
         </label>
+        <label class="label-group" id="eqDataTypeContainer" style="display: block;">EQ Data Type:
+          <select id="scenarioEQDataType" class="rounded-dropdown">
+            <option value="decimal">decimal</option>
+            <option value="bps">bps</option>
+          </select>
+        </label>
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px;">
           <span style="font-weight: 500;">Greek:</span>
           <span>Off</span>
@@ -1353,177 +1262,106 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
           </label>
           <span>On</span>
           <span id="shockAmountDisplay" style="display: none; margin-left: 10px; font-size: 0.9em; color: #555;">
-            IR Shock Amount: <span id="shockAmountValue">${shockVal}</span>
+            <span id="shockAmountValue">0.001</span>
           </span>
         </div>
       </div>
-
-      <div style="display: flex; flex-direction: column;">
-        ${showShockOptions ? `
-      <div>
-        <div id="shockToggle" style="color: rgb(143, 143, 143); cursor: pointer; margin-bottom: 10px;"
-        onclick="showInheritanceOptions()">
-          Advanced Settings for Inheritance ▼
-        </div>
-      </div>` : ''}
-      
-      <div id="inheritanceOptions" style="display: none;">
-        ${showShockOptions ? `
-        <div style="display: flex; flex-direction: column; gap: 10px; padding: 12px; border: 3px solid rgb(224, 224, 224); width: auto;">
-          <label class="label-group" style="color: rgb(143, 143, 143);">Inheritance:
-            <select class="inheritance-select rounded-dropdown" style="color: rgb(143, 143, 143);" data-curve="${curveName}">
-              <option value="Yes">Yes</option>
-              <option value="No" selected>No</option>
-            </select>
-          </label>
-          <div style="display: flex; align-items: center; gap: 4px;">
-            <label class="label-group" style="color: rgb(143, 143, 143);">Shock Parent:
-              <select class="shock-parent-select rounded-dropdown" style="color: rgb(143, 143, 143);" data-curve="${curveName}" onchange="toggleParentDropdown(this)">
-                <option value="Yes">Yes</option>
-                <option value="No" selected>No</option>
-              </select>
-            </label>
-            <div id="parentCurveDropdownContainer" style="display: none; margin-bottom: 10px;">
-              <label style="color: rgb(143, 143, 143);">Select Parent Curve:
-                <select id="parentCurveDropdown" class="rounded-dropdown" style="color: rgb(143, 143, 143);">
-                  ${Array.isArray(parentCurveName) ? parentCurveName.map(p => `<option value="${p}">${p}</option>`).join('') : ''}
-                </select>
-              </label>
-            </div>
-          </div>
-          <label class="label-group" style="color: rgb(143, 143, 143);">Shock Child (${childCurveName}):
-            <select class="shock-child-select rounded-dropdown" style="color: rgb(143, 143, 143);" data-curve="${curveName}">
-              <option value="Yes" selected>Yes</option>
-              <option value="No">No</option>
-            </select>
-          </label>
-        </div>
-      ` : ''}
-      </div>
-
-      
       </div>
     </div>
   `;
 
-      // Shock by grid point for Data Container curves
       html += `
-    <div id="gridFormContainer" style="display: none;">
-          <p class="text-sm text-gray-600">Grid Point form goes here.</p>
+    <div id="gridFormContainer" style="display: block;">
+          <p class="text-sm text-gray-600">Select curves from the 'Shock By Curve Name' list to add scenarios.</p>
         </div>`;
 
-      // Option to shock by grid point or bucket tenor for shock by curve name WITHOUT parent curves
-      // if (currentShockBy === 'name' && Array.isArray(parentCurveName) && parentCurveName.length === 0) {
-      //   html += `
-      //   <div id="shockMethodContainer" style="margin-top: 8px;">
-      //     <label class="label-group mt-4" style="font-weight: bold; color: #2563eb;">Shock Method:
-      //       <select id="shockMethodSelect" class="rounded-dropdown" onchange="handleShockMethodChange()">
-      //         <option value="tenor">Bucket Tenor</option>
-      //         <option value="grid">Gridpoint Tenor</option>
-      //       </select>
-      //     </label>
-      //   </div>
-      //   <div id="gridFormContainer" style="display: none;">
-      //     <p class="text-sm text-gray-600">Grid Point form goes here.</p>
-      //   </div>
-      // `;
-      // }
-
-      // Append tenor form container outside the flex container
-      html += `
-    <div id="tenorFormContainer" style="width: 100%; max-width: 100%; overflow-x: auto;">
-    <div class="overflow-x-auto mt-4">
-  <table id="scenarioTable" class="w-full max-w-5xl border border-gray-300 divide-y divide-gray-200 text-sm text-gray-900 rounded-md">
-    <thead class="bg-gray-50">
-      <tr>
-        <th class="px-3 py-2 border-r border-gray-200 text-left"></th>
-        <th colspan="10" class="px-3 py-2 text-center font-semibold text-gray-700 border-r border-gray-200">
-          Bucket Tenor</th>
-      </tr>
-      <tr>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">Grid Name</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">3m</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">6m</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">1y</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">2y</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">3y</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">5y</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">7y</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">10y</th>
-        <th class="px-3 py-2 border-r border-gray-200 text-left">20y</th>
-        <th class="px-3 py-2 text-left">30y</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-      <tr>
-        <td class="px-3 py-2 border-r border-gray-200">
-          <input type="text" name="GridName" value="${defaultRow[0]}" class="w-full px-2 py-1 border border-gray-300 rounded text-sm" />
-        </td>
-        <td style="display: none;">
-          <input type="text" name="CurveName" value="${defaultRow[1]}" />
-        </td>
-        ${defaultRow.slice(2).map(val => `
-          <td class="px-3 py-2 border-r border-gray-200">
-            <input type="number" value="${val}" class="w-full px-2 py-1 border border-gray-300 rounded text-sm text-center" />
-          </td>`).join('')}
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-  <div style="display: flex; align-items:center;">
-    <button onclick="addScenarioRow('${curveName}')" class="green-button" style="margin-top: 20px; margin-right: 10px;">Add Scenario</button>
-    <button onclick="submitScenario('${curveName}', '${parentCurveName}', '${childCurveName}')" class="green-button" style="margin-top: 20px; margin-right: 10px;">Save</button>
-    <button onclick="runSelectedCurves()" class="green-button" style="margin-top: 20px; margin-right: 10px;">Run Scenario</button>
-    <p style="color: red; margin-top: 20px; margin-left: 2px; font-size: 0.9em;">(Click save before running)</p>
-  </div>
-
-    <div id="linkContainer" style="margin-top: 10px;"></div>
-    </div>
-  `;
       curveContent.innerHTML = html;
 
-      // Default IR data type is decimal for data container curves
+      const irDataTypeContainer = document.getElementById('irDataTypeContainer');
+      const irShockTypeContainer = document.getElementById('irShockTypeContainer');
+      const eqDataTypeContainer = document.getElementById('eqDataTypeContainer');
+
+      // Hide EQ data type selection for shock by curve type
+      if (curveName === 'Bond' || curveName === 'YieldCurve' || curveName === 'Surv') {
+        document.getElementById('eqDataTypeContainer').style.display = 'none';
+      }
+
+      // Display data and shock type selections depending on IR and EQ curves selected
+      const containsDC = shockByCurveNameSet.size > 0 ? curveNameShockDC : selectedCurvesDC;
+      if (shockByCurveNameSet.size > 0 || curveName === 'ALL') {
+        if (containsDC === 'all') {
+          irDataTypeContainer.style.display = 'none';
+          irShockTypeContainer.style.display = 'none';
+          eqDataTypeContainer.style.display = 'block';
+        } else if (containsDC === 'some') {
+          irDataTypeContainer.style.display = 'block';
+          irShockTypeContainer.style.display = 'block';
+          eqDataTypeContainer.style.display = 'block';
+          document.getElementById('scenarioIRDataType').value = 'decimal';
+        } else if (containsDC === 'none') {
+          irDataTypeContainer.style.display = 'block';
+          irShockTypeContainer.style.display = 'block';
+          eqDataTypeContainer.style.display = 'none';
+        }
+      }
+
+      // Display greek and shock amount depending on data type (bps, decimal) and type of curves selected (IR, EQ)
+      const greekToggle = document.getElementById('scenarioGreekToggle');
+      const shockAmountDisplay = document.getElementById('shockAmountDisplay');
+      const shockAmountValue = document.getElementById('shockAmountValue');
       const irTypeSelect = document.getElementById('scenarioIRDataType');
-      if (irTypeSelect && type === 'Data Container') {
-        irTypeSelect.value = 'decimal';
-      }
+      const eqTypeSelect = document.getElementById('scenarioEQDataType');
 
-      // Don't show IR Shock Type for data container curves
-      if (type === 'Data Container') {
-        irShockTypeContainer.style.display = 'none';
-      } else {
-        irShockTypeContainer.style.display = 'block';
-      }
+      if (greekToggle) {
+        const showShockAmount = () => {
+          const greekOn = greekToggle.checked;
+          shockAmountDisplay.style.display = greekOn ? 'inline-block' : 'none';
+        };
 
-      setupShockAmountBehavior();
+        const updateShockAmount = () => {
+          if (shockByCurveNameSet.size > 0 || curveName === 'ALL') {
+            if (containsDC === 'some') {
+              const IRVal = irTypeSelect.value === 'bps' ? '10 bps' : '0.001';
+              const EQVal = eqTypeSelect.value === 'bps' ? '100 bps' : '0.01';
+              shockAmountValue.textContent = `IR Shock Amt: ${IRVal}, EQ Shock Amt: ${EQVal}`;
+            } else if (containsDC === 'all') {
+              shockAmountValue.textContent = eqTypeSelect.value === 'bps' ? 'EQ Shock Amt: 100 bps' : 'EQ Shock Amt: 0.01';
+            } else {
+              shockAmountValue.textContent = irTypeSelect.value === 'bps' ? 'IR Shock Amt: 10 bps' : 'IR Shock Amt: 0.001';
+            }
+          } else {
+            if (irTypeSelect.value === 'bps') {
+              shockAmountValue.textContent = 'IR Shock Amt: 10 bps';
+            } else {
+              shockAmountValue.textContent = 'IR Shock Amt: 0.001';
+            }
+          }
+        };
 
-      // Handle shock by bucket tenor or grid point tenor for shock by curve name, curve WITHOUT parent curves
-      // if (
-      //   currentShockBy === 'name' &&
-      //   Array.isArray(parentCurveName) &&
-      //   parentCurveName.length === 0 &&
-      //   document.querySelector('input[name="CurveName"]')
-      // ) {
-      //   handleShockMethodChange();
-      // }
+        greekToggle.addEventListener('change', showShockAmount);
+        irTypeSelect.addEventListener('change', updateShockAmount);
+        eqTypeSelect.addEventListener('change', updateShockAmount);
 
-      const shockParentSelect = document.querySelector('.shock-parent-select');
-      if (shockParentSelect && shockParentSelect.value === 'Yes') {
-        toggleParentDropdown(shockParentSelect);
+        showShockAmount();
+        updateShockAmount();
       }
     }
 
-    function showInheritanceOptions() {
-      const container = document.getElementById('inheritanceOptions');
-      const visible = container.style.display === 'block';
-      container.style.display = visible ? 'none' : 'block';
+    // Returns if selectedCurves contain none, some or all data container curves
+    function containsDataContainer(dataContainerCurves, selectedCurves) {
+      const bArray = [...selectedCurves];
+      const all = bArray.every(elem => dataContainerCurves.has(elem));
+      const some = bArray.some(elem => dataContainerCurves.has(elem));
+
+      if (all) return "all";
+      if (some) return "some";
+      return "none";
     }
 
 
     // Displays scenario generation form for shock by grid point
-    async function renderGridPointScenarioForm(curveName, tenors) {
-      const type = getSelectedCurveType();
+    async function renderGridPointScenarioForm(curveName, curves) {
+      console.log(curveName);
       const gridForm = document.getElementById('gridFormContainer');
       gridForm.innerHTML = '';
 
@@ -1533,46 +1371,56 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
       const table = document.createElement('table');
       table.className = 'border border-gray-300 text-sm text-gray-900 rounded-md';
       table.id = 'gridScenarioTable';
+      const headerRow = document.createElement('tr');
 
-      // Append correct label to Gridpoint ___ depending on data container curve type
-      let suffix = 'Tenor';
-      let curveCategory = '';
-      if (type === 'Data Container') {
-        try {
-          const res = await fetch(`/api/scenario-generation/curve-category/${encodeURIComponent(curveName)}`);
-          const data = await res.json();
-          curveCategory = data.curveCategory;
-
-        } catch (err) {
-          console.error(err);
-        }
-
-        if (curveCategory == 'BondSpotCurve') {
-          suffix = 'Cusip';
-        } else if (curveCategory == 'SpotPriceCurve') {
-          suffix = 'Ticker';
-        } else if (curveCategory == 'ForwardPriceCurve' || curveCategory == 'FXCurve') {
-          suffix = 'Tenor';
-        }
+      // Don't display curve name column for shock by curve type
+      if (curveName !== "Bond" && curveName !== "YieldCurve" && curveName !== "Surv") {
+        const curveNameHeader = document.createElement('th');
+        curveNameHeader.className = 'px-3 py-2 border-r';
+        curveNameHeader.innerText = 'Curve Name';
+        headerRow.appendChild(curveNameHeader);
       }
 
-      const headerRow = document.createElement('tr');
       const labelCell = document.createElement('th');
       labelCell.className = 'px-3 py-2 border-r';
-      labelCell.innerText = `Gridpoint ${suffix}`;
+      if (curveName === 'ALL') {
+        labelCell.innerHTML = `Bucket (IR)<br>Gridpoint (EQ)`;
+      } else if (curveName === "Bond" || curveName === "YieldCurve" || curveName === "Surv") {
+        labelCell.innerHTML = `Bucket`;
+      } else {
+        labelCell.innerHTML = `Gridpoint`;
+      }
       headerRow.appendChild(labelCell);
 
       const scenarioNames = ['BaseCase'];
       scenarioNames.forEach((name, index) => {
         const th = document.createElement('th');
-        th.className = 'px-3 py-2 border-r align-top';
+        th.className = 'px-3 py-2 border-r align-top text-center';
 
+        // Create checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'scenario-include-checkbox';
+        checkbox.style.marginBottom = '4px';
+        checkbox.checked = true; // default to included
+
+        // Create label for scenario name
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
         nameInput.value = name;
-        nameInput.className = 'scenario-name-input w-full px-2 py-1 border border-gray-300 rounded text-sm text-center mb-2';
+        nameInput.className = 'scenario-name-input w-full px-2 py-1 border border-gray-300 rounded text-sm text-center mt-1';
 
-        th.appendChild(nameInput);
+        // Wrap checkbox and input
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex flex-col items-center';
+        wrapper.appendChild(checkbox);
+        wrapper.appendChild(nameInput);
+        th.style.whiteSpace = 'nowrap';
+        th.style.minWidth = '160px';
+        th.style.minWidth = '160px';
+
+
+        th.appendChild(wrapper);
         headerRow.appendChild(th);
       });
 
@@ -1582,25 +1430,38 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
       table.appendChild(thead);
 
       const tbody = document.createElement('tbody');
-      tenors.forEach(tenor => {
-        const row = document.createElement('tr');
-        const tenorCell = document.createElement('td');
-        tenorCell.className = 'px-3 py-2 border-r font-medium text-gray-700';
-        tenorCell.innerText = tenor;
-        row.appendChild(tenorCell);
+      curves.forEach(curve => {
+        curve.tenors.forEach((tenor, index) => {
+          const row = document.createElement('tr');
 
-        scenarioNames.forEach(() => {
-          const td = document.createElement('td');
-          td.className = 'px-3 py-2 border-r';
-          const input = document.createElement('input');
-          input.type = 'number';
-          input.value = '0';
-          input.className = 'grid-input w-full px-2 py-1 border border-gray-300 rounded text-sm text-center';
-          td.appendChild(input);
-          row.appendChild(td);
+          // Add curve name column if not shock by curve type
+          if (curveName !== "Bond" && curveName !== "YieldCurve" && curveName !== "Surv") {
+            const labelCell = document.createElement('td');
+            labelCell.className = 'px-3 py-2 border-r font-semibold text-gray-800';
+            labelCell.innerText = index === 0 ? curve.name : '';
+            row.appendChild(labelCell);
+          }
+
+          // Gridpoint column
+          const tenorCell = document.createElement('td');
+          tenorCell.className = 'px-3 py-2 border-r font-medium text-gray-700';
+          tenorCell.innerText = tenor;
+          row.appendChild(tenorCell);
+
+          // Scenario value columns
+          scenarioNames.forEach(() => {
+            const td = document.createElement('td');
+            td.className = 'px-3 py-2 border-r';
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = '0';
+            input.className = 'grid-input w-full px-2 py-1 border border-gray-300 rounded text-sm text-center';
+            td.appendChild(input);
+            row.appendChild(td);
+          });
+
+          tbody.appendChild(row);
         });
-
-        tbody.appendChild(row);
       });
 
       table.appendChild(tbody);
@@ -1636,16 +1497,25 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
         const newColIndex = table.rows[0].cells.length - 1;
 
         const th = document.createElement('th');
-        th.className = 'px-3 py-2 border-r align-top';
+        th.className = 'px-3 py-2 border-r align-top text-center';
 
+        // Create checkbox
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'scenario-include-checkbox';
+        checkbox.style.marginBottom = '4px';
+        checkbox.checked = true;
+
+        // Create scenario name input
         const nameInput = document.createElement('input');
         nameInput.type = 'text';
-        nameInput.placeholder = 'GridName'
+        nameInput.placeholder = 'GridName';
         nameInput.value = '';
-        nameInput.className = 'scenario-name-input w-full px-2 py-1 border border-gray-300 rounded text-sm text-center mb-2';
+        nameInput.className = 'scenario-name-input w-full px-2 py-1 border border-gray-300 rounded text-sm text-center mt-1';
 
+        // Create fill input and button
         const fillWrapper = document.createElement('div');
-        fillWrapper.className = 'flex justify-center items-center gap-1';
+        fillWrapper.className = 'flex justify-center items-center gap-1 mt-1';
 
         const fillInput = document.createElement('input');
         fillInput.type = 'number';
@@ -1667,8 +1537,14 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
         fillWrapper.appendChild(fillInput);
         fillWrapper.appendChild(fillButton);
 
-        th.appendChild(nameInput);
-        th.appendChild(fillWrapper);
+        // Wrap checkbox and input
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flex flex-col items-center';
+        wrapper.appendChild(checkbox);
+        wrapper.appendChild(nameInput);
+        wrapper.appendChild(fillWrapper);
+
+        th.appendChild(wrapper);
         table.rows[0].appendChild(th);
 
         // Add cells to each row
@@ -1702,6 +1578,14 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
       // Append buttons to the grid form
       gridForm.appendChild(buttonRow);
 
+      // Placeholder for the "Running..." message
+      const runningMsg = document.createElement('p');
+      runningMsg.id = 'runningMessage';
+      runningMsg.style.color = 'green';
+      runningMsg.style.marginTop = '10px';
+      runningMsg.style.fontSize = '0.95em';
+      gridForm.appendChild(runningMsg);
+
       const viewScenario = document.createElement('div');
       viewScenario.id = 'gridLinkContainer';
       viewScenario.style.marginTop = '4px';
@@ -1712,6 +1596,12 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
       fillRow.className = 'ml-8 mt-2 flex gap-4';
       gridForm.appendChild(fillRow);
       gridForm.appendChild(container);
+
+      // Output container for scenario results
+      const outputContainer = document.createElement('div');
+      outputContainer.id = 'scenarioOutputContainer';
+      outputContainer.className = 'mt-8';
+      gridForm.appendChild(outputContainer);
     }
 
 
@@ -1744,363 +1634,95 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
       tbody.appendChild(row);
     }
 
+    // Saving scenario definition file for grid point shock
     function saveGridScenario(curveName) {
-      const table = document.getElementById('gridScenarioTable');
-      const headerInputs = table.querySelectorAll('thead input.scenario-name-input');
-      const scenarioNames = Array.from(headerInputs).map(input => input.value.trim());
-      const type = getSelectedCurveType();
+      let type = '';
+      if (containsDataContainer(dataContainerNames, shockByCurveNameSet) === "all") {
+        type = 'Data Container';
+      }
 
-      const tenorLabels = Array.from(table.querySelectorAll('tbody tr td:first-child')).map(td => td.innerText.trim());
+      // Determine if selected curves contain data container curves
+      let containsDC = '';
+      const isCurveType = (curveName === "Bond" || curveName === "YieldCurve" || curveName === "Surv");
+      if (isCurveType) {
+        containsDC = 'none';
+      } else if (shockByCurveNameSet.size > 0) {
+        containsDC = containsDataContainer(dataContainerNames, shockByCurveNameSet);
+      } else {
+        containsDC = containsDataContainer(dataContainerNames, selectedCurves);
+      }
+
+      const table = document.getElementById('gridScenarioTable');
+
+      // Only write scenarios to scenario def file if they are checked by user
+      const headerCells = table.querySelectorAll('thead th');
+      const includedScenarios = [];
+
+      headerCells.forEach((th, index) => {
+        const checkbox = th.querySelector('.scenario-include-checkbox');
+        const nameInput = th.querySelector('.scenario-name-input');
+        if (checkbox && checkbox.checked && nameInput) {
+          includedScenarios.push({
+            name: nameInput.value.trim(),
+            colIndex: index
+          });
+        }
+      });
+
+      const tbodyRows = Array.from(table.querySelectorAll('tbody tr'));
+      const tenorLabels = tbodyRows.map(row => {
+        const cells = row.querySelectorAll('td');
+        return cells[isCurveType ? 0 : 1].innerText.trim();
+      });
+
 
       const rows = [];
-
-      for (let i = 0; i < scenarioNames.length; i++) {
-        const scenarioName = scenarioNames[i];
+      includedScenarios.forEach(({ name, colIndex }) => {
         const values = [];
         for (let j = 0; j < tenorLabels.length; j++) {
           const row = table.querySelectorAll('tbody tr')[j];
-          const cell = row.querySelectorAll('td')[i + 1]; // +1 to skip tenor label
+          const cell = row.querySelectorAll('td')[colIndex];
           const input = cell.querySelector('input');
-          values.push(input.value.trim() || '0');
+          values.push(input?.value.trim() || '0');
         }
         rows.push({
-          GridName: scenarioName,
-          CurveName: '', // not used in gridpoint format
+          GridName: name,
+          CurveName: isCurveType ? curveName : '', // only include CurveName for shock by curve type
           values
         });
-      }
+      });
 
-      let curveCategory = '';
+      const scenario = {
+        curveName,
+        IRDataType: document.getElementById('scenarioIRDataType')?.value || 'decimal',
+        IRShockType: document.getElementById('scenarioShockType')?.value || '',
+        EQDataType: document.getElementById('scenarioEQDataType')?.value,
+        Greek: !document.getElementById('scenarioGreekToggle')?.checked ? false : true,
+        containsDC,
+        IRRiskFactors,
+        EQRiskFactors,
+        tenors: tenorLabels,
+        rows
+      };
+      console.log(scenario);
 
-      fetch(`/api/scenario-generation/curve-category/${encodeURIComponent(curveName)}`)
-        .then(response => response.json())
+      fetch(`/api/scenario-generation/save-scenario-def?type=${encodeURIComponent(type)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scenario)
+      })
+        .then(res => res.json())
         .then(data => {
-          curveCategory = data.curveCategory;
-
-          const addCurveName = type === 'Data Container' && (curveCategory == 'FXCurve' || curveCategory == 'ForwardPriceCurve');
-          // Don't append curve name to scenario def file for data container curves
-          const IRRiskFactors = tenorLabels.map(t => addCurveName ? `${t}${curveName}` : t).join(':');
-
-          const scenario = {
-            curveName,
-            IRDataType: document.getElementById('scenarioIRDataType')?.value || 'decimal',
-            IRShockType: document.getElementById('scenarioShockType')?.value || '',
-            Greek: !document.getElementById('scenarioGreekToggle')?.checked ? false : true,
-            IRRiskFactors,
-            tenors: tenorLabels.map(t => addCurveName ? `${t}${curveName}` : t),
-            rows
-          };
-
-          fetch(`/api/scenario-generation/save-scenario-def?type=${encodeURIComponent(type)}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(scenario)
-          })
-            .then(res => res.json())
-            .then(data => {
-              alert(data.message);
-              scenarioSaved = true;
-              const linkContainer = document.getElementById('gridLinkContainer');
-              linkContainer.innerHTML = `
+          alert(data.message);
+          scenarioSaved = true;
+          const linkContainer = document.getElementById('gridLinkContainer');
+          linkContainer.innerHTML = `
         <a href="/api/scenario-generation/scenario.txt" target="_blank" rel="noopener noreferrer"><u>View Scenario File</u></a><br/>
       `;
-            })
-            .catch(err => {
-              console.error('❌ Failed to save scenario:', err);
-              alert('Failed to save scenario.');
-            });
         })
         .catch(err => {
-          console.error("Error fetching curve category:", err);
-        })
-    }
-
-    // Display option to select parent curve to shock
-    function toggleParentDropdown(selectElement) {
-      const container = document.getElementById('parentCurveDropdownContainer');
-      if (selectElement.value === 'Yes') {
-        container.style.display = 'block';
-      } else {
-        container.style.display = 'none';
-      }
-    }
-
-    // Displays forms for shock by grid point and shock by bucket tenor
-    // Only for shock by curve name, curve WITHOUT parent curves
-    // function handleShockMethodChange() {
-    //   const method = document.getElementById('shockMethodSelect').value;
-    //   const curveName = document.querySelector('input[name="CurveName"]')?.value;
-
-    //   if (method === 'grid') {
-    //     document.getElementById('gridFormContainer').style.display = 'block';
-    //     document.getElementById('tenorFormContainer').style.display = 'none';
-    //     fetch(`/api/scenario-generation/tenors/${curveName}`)
-    //       .then(res => res.json())
-    //       .then(data => renderGridPointScenarioForm(curveName, data.tenors))
-    //       .catch(err => {
-    //         console.error('Failed to fetch tenors:', err);
-    //         alert('Could not load tenors for grid point shock.');
-    //       });
-    //   } else {
-    //     document.getElementById('gridFormContainer').style.display = 'none';
-    //     document.getElementById('tenorFormContainer').style.display = 'block';
-    //   }
-    // }
-
-    // === Logic to handle Greek toggle and IR Data Type change ===
-    function setupShockAmountBehavior() {
-      const greekToggle = document.getElementById('scenarioGreekToggle');
-      const irTypeSelect = document.getElementById('scenarioIRDataType');
-      const shockAmountDisplay = document.getElementById('shockAmountDisplay');
-      const shockAmountValue = document.getElementById('shockAmountValue');
-
-      function updateShockAmountVisibility() {
-        const greekOn = greekToggle.checked;
-        shockAmountDisplay.style.display = greekOn ? 'inline-block' : 'none';
-      }
-
-      function updateShockAmountValue() {
-        const type = irTypeSelect.value;
-        const curveType = getSelectedCurveType();
-        const val = curveType === 'Data Container' ? '0.01' : '0.001';
-        shockAmountValue.textContent = type === 'bps' ? '10 bps' : val;
-      }
-
-      greekToggle.addEventListener('change', updateShockAmountVisibility);
-      irTypeSelect.addEventListener('change', updateShockAmountValue);
-
-      // Initialize on load
-      updateShockAmountVisibility();
-      updateShockAmountValue();
-    }
-
-    // Add row
-    function addScenarioRow(curveName) {
-      const tbody = document.getElementById('scenarioTable').querySelector('tbody');
-      const row = document.createElement('tr');
-      row.innerHTML = `
-    <td class="px-3 py-2 border-r border-gray-200">
-      <input type="text" name="GridName" placeholder="GridName" class="w-full px-2 py-1 border border-gray-300 rounded text-sm" />
-    </td>
-    <td style="display: none;">
-      <input type="text" name="CurveName" value="${curveName}" />
-    </td>
-    ${['3m', '6m', '1y', '2y', '3y', '5y', '7y', '10y', '20y', '30y'].map(() => `
-      <td class="px-3 py-2 border-r border-gray-200">
-        <input type="number" value="0" class="w-full px-2 py-1 border border-gray-300 rounded text-sm text-center" />
-      </td>
-    `).join('')}
-    <td class="px-3 py-2 border-l border-gray-200" style="min-width: 120px;">
-      <div class="flex items-center gap-2">
-        <input type="number" placeholder="Value" class="fill-value-input w-auto px-2 py-1 bg-gray-200 border border-gray-300 rounded text-sm text-center" />
-        <button onclick="fillRowWithValue(this)" class="px-2.5 py-1 text-white rounded text-sm" style="background-color: #2563eb;">Fill Row</button>
-      </div>
-    </td>
-  `;
-      tbody.appendChild(row);
-    }
-
-    // Fills row in scenario generation form with value
-    function fillRowWithValue(button) {
-      const row = button.closest('tr');
-      const value = row.querySelector('.fill-value-input').value;
-
-      if (value === '') {
-        alert('Please enter a value.');
-        return;
-      }
-
-      const inputs = row.querySelectorAll('input[type="number"]');
-      inputs.forEach(input => {
-        input.value = value;
-      });
-    }
-
-    // Save scenario -- creates scenario definition file
-    // Shock by curve name with parent curve (i.e. inheritance, shock parent, child) requires diff scenario definition construction
-    function submitScenario(curveName, parentCurveName = null, childCurveName = null) {
-      const shockBy = currentShockBy;
-
-      if (shockBy === 'name' && parentCurveName) {
-        submitScenarioByCurveName(curveName, parentCurveName, childCurveName);
-      } else {
-        submitScenarioGeneral(curveName);
-      }
-    }
-
-    // Send scenario definition data to backend for file construction
-    function submitScenarioGeneral(curveName) {
-      const IRDataType = document.getElementById('scenarioIRDataType').value;
-      const IRShockType = document.getElementById('scenarioShockType').value;
-      const Greek = document.getElementById('scenarioGreekToggle').checked;
-      const rows = [];
-
-      const tbody = document.getElementById('scenarioTable').querySelector('tbody');
-      const trList = Array.from(tbody.querySelectorAll('tr')).slice(1); // skip BaseCase
-
-      trList.forEach(tr => {
-        const inputs = tr.querySelectorAll('input');
-        const row = {
-          GridName: tr.querySelector('input[name="GridName"]').value.trim(),
-          CurveName: tr.querySelector('input[name="CurveName"]').value.trim(),
-          values: Array.from(tr.querySelectorAll('input[type="number"]'))
-            .slice(0, 10) // Only take the first 10 tenor inputs
-            .map(input => input.value.trim() || '0')
-        };
-        rows.push(row);
-      });
-
-      // Add BaseCase manually
-      rows.unshift({
-        GridName: 'BaseCase',
-        CurveName: curveName,
-        values: Array(10).fill('0')
-      });
-
-      const scenario = {
-        curveName,
-        IRDataType,
-        IRShockType,
-        Greek,
-        rows
-      };
-
-      fetch('/api/scenario-generation/save-scenario-def', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(scenario)
-      })
-        .then(res => res.json())
-        .then(data => {
-          alert(data.message);
-          scenarioSaved = true;
-          const linkContainer = document.getElementById('linkContainer');
-          linkContainer.innerHTML = '<a href="/api/scenario-generation/scenario.txt" target="_blank" rel="noopener noreferrer"><u>View Scenario File</u></a><br/>';
-        })
-        .catch(err => {
-          console.error('Failed to save scenario:', err);
-          alert('❌ Failed to save scenario.');
-        });
-    }
-
-    // Send scenario data to backend for file construction -- for shock by curve name with parent curve relationship
-    function submitScenarioByCurveName(curveName, _unusedParentCurveName, childCurveName) {
-      const parentCurveName = document.getElementById('parentCurveDropdown')?.value || _unusedParentCurveName;
-      const IRDataType = document.getElementById('scenarioIRDataType').value;
-      const IRShockType = document.getElementById('scenarioShockType').value;
-      const Greek = document.getElementById('scenarioGreekToggle').checked;
-      const rows = [];
-
-      const tbody = document.getElementById('scenarioTable').querySelector('tbody');
-      const trList = Array.from(tbody.querySelectorAll('tr')).slice(1); // Skip BaseCase rows
-
-      const inheritance = document.querySelector('.inheritance-select').value === 'Yes';
-      const shockParent = document.querySelector('.shock-parent-select').value === 'Yes';
-      const shockChild = document.querySelector('.shock-child-select').value === 'Yes';
-
-      // Add BaseCase rows
-      if (shockParent) {
-        if (inheritance) {
-          // Parent before child
-          rows.unshift({
-            GridName: 'BaseCase',
-            CurveName: childCurveName,
-            values: Array(10).fill('0')
-          });
-          rows.unshift({
-            GridName: 'BaseCase',
-            CurveName: parentCurveName,
-            values: Array(10).fill('0')
-          });
-        } else {
-          // Child before parent
-          rows.unshift({
-            GridName: 'BaseCase',
-            CurveName: parentCurveName,
-            values: Array(10).fill('0')
-          });
-          rows.unshift({
-            GridName: 'BaseCase',
-            CurveName: childCurveName,
-            values: Array(10).fill('0')
-          });
-        }
-      } else {
-        // Only add child if shock parent is 'No'
-        rows.unshift({
-          GridName: 'BaseCase',
-          CurveName: childCurveName,
-          values: Array(10).fill('0')
-        });
-      }
-
-      // Iterate over each user-added scenario row
-      trList.forEach(tr => {
-        const gridName = tr.querySelector('input[name="GridName"]').value.trim();
-        const values = Array.from(tr.querySelectorAll('input[type="number"]'))
-          .slice(0, 10) // Only take the first 10 tenor inputs
-          .map(input => input.value.trim() || '0');
-
-        if (shockParent) {
-          if (inheritance) {
-            rows.push({
-              GridName: gridName,
-              CurveName: parentCurveName,
-              values: values
-            });
-            rows.push({
-              GridName: gridName,
-              CurveName: childCurveName,
-              values: shockChild ? values : Array(10).fill('0')
-            });
-          } else {
-            rows.push({
-              GridName: gridName,
-              CurveName: childCurveName,
-              values: shockChild ? values : Array(10).fill('0')
-            });
-            rows.push({
-              GridName: gridName,
-              CurveName: parentCurveName,
-              values: values
-            });
-          }
-        } else {
-          // Only add child if shock parent is 'No'
-          rows.push({
-            GridName: gridName,
-            CurveName: childCurveName,
-            values: shockChild ? values : Array(10).fill('0')
-          });
-        }
-      });
-
-      const scenario = {
-        curveName,
-        IRDataType,
-        IRShockType,
-        Greek,
-        rows
-      };
-
-      fetch('/api/scenario-generation/save-scenario-def', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(scenario)
-      })
-        .then(res => res.json())
-        .then(data => {
-          alert(data.message);
-          scenarioSaved = true;
-          // Display the link to scenario.txt
-          const linkContainer = document.getElementById('linkContainer');
-          linkContainer.innerHTML = `
-          <a href="/api/scenario-generation/scenario.txt" target="_blank" rel="noopener noreferrer"><u>View Scenario File</u></a><br/>
-          `;
-        })
-        .catch(err => {
-          console.error('Failed to save scenario:', err);
-          alert('❌ Failed to save scenario.');
+          console.error('❌ Failed to save scenario:', err);
+          alert('Failed to save scenario.');
         });
     }
   </script>
