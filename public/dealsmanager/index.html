@@ -9,46 +9,32 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="style.css" />
-    <style>
-        .dropdown-button::after {
-            content: '\25BC';
-            /* Unicode for down arrow */
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            font-size: 0.75rem;
-            color: #6b7280;
-            /* Tailwind gray-500 */
-        }
-
-        .category {
-            flex: 1;
-            /* Ensures the flex items grow equally */
-            min-width: 200px;
-            /* Minimum width for responsiveness */
-        }
-
-        .relative {
-            position: relative;
-        }
-
-        textarea {
-            resize: vertical;
-            /* Allows the user to resize the textarea vertically */
-        }
-    </style>
 </head>
 
-<body class="bg-gray-100 font-inter">
-    <div class="container mx-auto mt-10 p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Deals Manager</h3>
-        <div class="flex flex-wrap gap-4">
+<body class="bg-gray-50 font-inter">
+    <div class="px-4 py-6 mb-6 w-full" style="background-color: #16a34a;">
+        <div style="display: flex; align-items: center;">
+            <a href="/index.html">
+                <img src="../images/manulife_logo.jpg" alt="Manulife Logo" class="h-10 w-auto mr-4" />
+            </a>
+            <h1 class="text-2xl font-semibold text-white">PAVE Deals Manager</h1>
+        </div>
+    </div>
+
+    <div class="w-full mx-auto mt-10 mb-10 p-6">
+        <div class="flex gap-4">
             <!-- Asset ID -->
             <div class="category">
                 <label class="block text-sm font-medium text-gray-700">Asset ID</label>
-                <textarea id="assetIdInput" placeholder="Separate Asset Id by commas"
+                <textarea id="assetIdInput" placeholder="Separate Asset IDs by commas"
+                    class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                    rows="3"></textarea>
+            </div>
+
+            <!--Sec Id-->
+            <div class="category">
+                <label class="block text-sm font-medium text-gray-700">Sec Id</label>
+                <textarea id="secIdInput" placeholder="Separate Sec IDs by commas"
                     class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                     rows="3"></textarea>
             </div>
@@ -67,7 +53,6 @@
                             class="w-full p-2 border-b border-gray-300 focus:outline-none"
                             onkeyup="filterOptions('portfolioDropdown', this.value)">
                         <ul class="max-h-60 overflow-auto p-2">
-                            <!-- Options will be populated by JavaScript -->
                         </ul>
                     </div>
                 </div>
@@ -87,7 +72,6 @@
                             class="w-full p-2 border-b border-gray-300 focus:outline-none"
                             onkeyup="filterOptions('currencyDropdown', this.value)">
                         <ul class="max-h-60 overflow-auto p-2">
-                            <!-- Options will be populated by JavaScript -->
                         </ul>
                     </div>
                 </div>
@@ -107,7 +91,6 @@
                             class="w-full p-2 border-b border-gray-300 focus:outline-none"
                             onkeyup="filterOptions('instrumentDropdown', this.value)">
                         <ul class="max-h-60 overflow-auto p-2">
-                            <!-- Options will be populated by JavaScript -->
                         </ul>
                     </div>
                 </div>
@@ -127,7 +110,6 @@
                             class="w-full p-2 border-b border-gray-300 focus:outline-none"
                             onkeyup="filterOptions('discountCurveDropdown', this.value)">
                         <ul class="max-h-60 overflow-auto p-2">
-                            <!-- Options will be populated by JavaScript -->
                         </ul>
                     </div>
                 </div>
@@ -147,7 +129,6 @@
                             class="w-full p-2 border-b border-gray-300 focus:outline-none"
                             onkeyup="filterOptions('projectionCurveDropdown', this.value)">
                         <ul class="max-h-60 overflow-auto p-2">
-                            <!-- Options will be populated by JavaScript -->
                         </ul>
                     </div>
                 </div>
@@ -156,12 +137,33 @@
 
         <div class="gap-4 mt-4 mb-2">
             <button onclick="collectAndSendData()"
-                class="flex-1 w-auto mt-8 green-button text-gray-700 text-sm py-2 rounded">Generate Deals</button>
-            <button id="resetCurveGroup" class="gray-button">Clear Selections</button>
+                class="flex-1 w-auto mt-8 green-button text-gray-700 py-2 rounded">Generate Deals</button>
+            <button id="resetCurveGroup" class="gray-button" onclick="clearSelections()">Clear Selections</button>
         </div>
+
+
+        <!-- Status Message -->
+        <div id="statusMessage" style="color: green; display: none; margin-top: 10px;">Generating...</div>
+
+        <hr id="separator" style="display: none; margin-top: 40px;">
+
+        <!-- Dynamic Buttons Container -->
+        <div id="dealButtons" style="margin-top: 40px;"></div>
+
+        <!--Download Deal Files Buttons-->
+        <div id="downloadButtons" style="margin-top: 20px;"></div>
+
+        <!-- Preview Box -->
+        <div id="previewBox" style="margin-top: 20px; margin-bottom: 20px; display: none;">
+            <textarea id="dealPreview" rows="20" cols="100" readonly
+                style="white-space: pre; font-family: monospace; margin-bottom: 20px;"></textarea>
+        </div>
+
     </div>
 
     <script>
+        window.onload = clearSelections;
+
         fetch('/api/deals-manager/filters')
             .then(res => res.json())
             .then(data => {
@@ -173,6 +175,7 @@
                 populateDropdown('projectionCurveDropdown', data.ProjectionCurve);
             });
 
+        // Populate dropdowns for each filtering option (portfolio, currency, instrument...)
         function populateDropdown(dropdownId, options) {
             const dropdown = document.getElementById(dropdownId).querySelector('ul');
             options.forEach(optionValue => {
@@ -186,11 +189,13 @@
             });
         }
 
+        // Manage dropdown toggle icon
         function toggleDropdown(id) {
             const dropdown = document.getElementById(id);
             dropdown.classList.toggle('hidden');
         }
 
+        // Display dropdown options based on user's search
         function filterOptions(dropdownId, searchTerm) {
             const dropdown = document.getElementById(dropdownId);
             const options = dropdown.querySelectorAll('ul li');
@@ -205,19 +210,35 @@
             });
         }
 
+        // Check if asset Ids entered are separated by commas
         function validateAssetIds(assetIds) {
-            const regex = /^\d+(,\d+)*$/; // Regex to match numbers separated by commas
+            const regex = /^\d+(,\d+)*$/;
             return regex.test(assetIds);
         }
 
-        function collectAndSendData() {
+        async function collectAndSendData() {
+            const status = document.getElementById('statusMessage');
+            const buttonsContainer = document.getElementById('dealButtons');
+            const previewBox = document.getElementById('previewBox');
+            const previewArea = document.getElementById('dealPreview');
+            const downloadContainer = document.getElementById('downloadButtons');
+            downloadContainer.innerHTML = '';
+
+            // Show "Generating..." message
+            status.style.display = 'block';
+            status.textContent = 'Generating...';
+            buttonsContainer.innerHTML = '';
+            previewBox.style.display = 'none';
+
             // Collect Asset IDs
             const assetIdInput = document.getElementById('assetIdInput');
-            const assetIds = assetIdInput.value.trim();
+            const assetIds = assetIdInput.value.trim().split(',').map(id => id.trim()).filter(id => id);
 
-            const assetIdArray = assetIds.split(',').map(id => id.trim()).filter(id => id);
+            // Collect Sec IDs
+            const secIdInput = document.getElementById('secIdInput');
+            const secIds = secIdInput.value.trim().split(',').map(id => id.trim()).filter(id => id);
 
-            // Collect selected options for each dropdown category
+            // Collect selected filters from dropdowns
             const categories = ['portfolioDropdown', 'currencyDropdown', 'instrumentDropdown', 'discountCurveDropdown', 'projectionCurveDropdown'];
             const selectedData = {};
 
@@ -225,34 +246,114 @@
                 const dropdown = document.getElementById(categoryId);
                 const selectedOptions = Array.from(dropdown.querySelectorAll('input[type="checkbox"]:checked'))
                     .map(checkbox => checkbox.value);
-                const categoryName = categoryId.replace('Dropdown', ''); // e.g., portfolioDropdown -> portfolio
+                const categoryName = categoryId.replace('Dropdown', '');
                 selectedData[categoryName.charAt(0).toUpperCase() + categoryName.slice(1)] = selectedOptions;
             });
 
-            // Combine into final data object
             const dataToSend = {
-                'Asset Id': assetIdArray,
+                AssetId: assetIds,
+                SecId: secIds,
                 ...selectedData
             };
 
             console.log('Data to send:', dataToSend);
 
-            // Send data to backend
-            fetch('/api/deals-manager/send-selected-data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(dataToSend)
-            })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Success:', data);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
+            try {
+                const response = await fetch('/api/deals-manager/send-selected-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToSend)
                 });
+
+                const result = await response.json();
+                console.log('Success:', result.sheets);
+
+                status.style.display = 'none';
+
+                // Show alert if no deals found for user's selected filters
+                if (result.count === 0) {
+                    alert('⚠️ No deals were found.');
+                    return;
+                }
+
+                // Display view and download buttons for each deals txt file
+                const sheets = result.sheets || [];
+                sheets.forEach(sheetName => {
+                    const btn = document.createElement('button');
+                    btn.className = 'green-button';
+                    btn.textContent = `View ${sheetName} Deals`;
+                    btn.style.marginRight = '10px';
+                    btn.onclick = async () => {
+
+                        document.querySelectorAll('.green-button').forEach(b => {
+                            b.style.outline = 'none';
+                            b.style.border = '1px solid #4CAF50';
+                        });
+
+                        btn.style.outline = '2px solid #00FF00';
+                        btn.style.border = '2px solid #00FF00';
+
+                        // Render deals txt in table form
+                        const fileRes = await fetch(`/api/deals-manager/preview-table/Deals_${sheetName}.txt`);
+                        const html = await fileRes.text();
+                        previewBox.innerHTML = html;
+                        previewBox.style.display = 'block';
+                    };
+                    buttonsContainer.appendChild(btn);
+
+                    const downloadBtn = document.createElement('button');
+                    downloadBtn.className = 'blue-button';
+                    downloadBtn.textContent = `Download ${sheetName} Deals`;
+                    downloadBtn.style.marginRight = '10px';
+                    downloadBtn.onclick = () => {
+                        const fileUrl = `/api/deals-manager/download/Deals_${sheetName}.txt`;
+                        const link = document.createElement('a');
+                        link.href = fileUrl;
+                        link.download = `Deals_${sheetName}.txt`;
+                        link.click();
+
+                    }
+                    downloadContainer.appendChild(downloadBtn);
+
+                    document.getElementById('separator').style.display = 'block';
+                });
+
+
+            } catch (error) {
+                console.error('Error:', error);
+                status.style.color = 'red';
+                status.textContent = 'Error generating deals.';
+            }
         }
+
+        function clearSelections() {
+            // Uncheck all checkboxes
+            document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+
+            // Clear Asset ID inputs
+            const assetIdInput = document.getElementById('assetIdInput');
+            if (assetIdInput) assetIdInput.value = '';
+
+            // Clear deal buttons and preview box
+            const buttonsContainer = document.getElementById('dealButtons');
+            const downloadContainer = document.getElementById('downloadButtons');
+            const previewBox = document.getElementById('previewBox');
+            if (buttonsContainer) buttonsContainer.innerHTML = '';
+            if (downloadContainer) downloadContainer.innerHTML = '';
+            if (previewBox) {
+                previewBox.innerHTML = '';
+                previewBox.style.display = 'none';
+            }
+            document.getElementById('separator').style.display = 'none';
+
+            fetch('/api/deals-manager/clear-files', { method: 'DELETE' })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data.message);
+                })
+                .catch(err => console.error('Error clearing files:', err));
+        }
+
     </script>
 </body>
 
