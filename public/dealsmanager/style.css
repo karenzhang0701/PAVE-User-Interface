@@ -31,6 +31,18 @@ body {
   /* Tailwind green-700 */
 }
 
+.quote-heading {
+  font-size: 1.2rem;
+  /* text-base */
+  font-weight: 700;
+  /* font-bold */
+  color: #090909;
+  /* text-gray-700 */
+  margin-bottom: 0.3rem;
+  /* mb-2 */
+  display: block;
+}
+
 .blue-button {
   padding: 0.375rem 0.75rem;
   /* py-1.5 px-3 */
@@ -42,12 +54,30 @@ body {
   /* text-sm */
   border-radius: 0.375rem;
   /* rounded-md */
+  text-align: center;
+  display: inline-block;
   transition: background-color 0.2s ease;
 }
 
 .blue-button:hover {
   background-color: #1d4ed8;
   /* hover:bg-blue-700 */
+}
+
+.white-button {
+  background-color: white; /* Tailwind green-600 */
+  color: #16a34a;
+  font-weight: bold;
+  font-size: 0.875rem; /* text-sm */
+  padding: 0.325rem 0.85rem; /* vertical: 6px, horizontal: 16px */
+  border-radius: 0.375rem; /* rounded */
+  text-align: center;
+  display: inline-block;
+  transition: background-color 0.2s ease;
+}
+
+.white-button:hover {
+  background-color: rgb(237, 237, 237);
 }
 
 .small-text {

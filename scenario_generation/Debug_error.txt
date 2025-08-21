@@ -28,3 +28,25 @@ ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: expect at least two ar
 
 ERROR! FAILURE: Fail to find curve SURV_GENERIC.JPY in GridBase
 
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: LoadScenarioDefFile failed: ENSURE unmet: inconsistent EQ risk factors
+
+ERROR! FAILURE: Need valuation date (-vd)
+

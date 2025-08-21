@@ -32,16 +32,23 @@
 
     <div class="ml-6 mr-6">
       <!--Valuation Date-->
-      <h3 class="quote-heading">Valuation Date</h3>
-      <div>
-        <div class="flex mb-4 gap-2 items-center">
-          <input type="text" id="curveDate" placeholder="YYYY-MM-DD"
-            class="w-40 rounded-md bg-white h-8 px-2 py-1 text-sm text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:outline-none" />
+      <div id="valuationDate">
+        <h3 class="quote-heading">Valuation Date</h3>
+        <div>
+          <div class="flex mb-4 gap-2 items-center">
+            <input type="text" id="curveDate" placeholder="YYYY-MM-DD"
+              class="w-40 rounded-md bg-white h-8 px-2 py-1 text-sm text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:outline-none" />
+          </div>
         </div>
       </div>
 
       <div id="curveControls">
-        <div class="mb-6">
+        <div class="mt-4 mb-4" id="selectedCurvesList" style="display: none;">
+          <h3 class="quote-heading">Selected Curves: </h3>
+          <h3 id="listCurves" class="quote-heading"></h3>
+        </div>
+
+        <div class="mb-6" id="selectedCurvesContent">
           <label class="quote-heading mt-4">Select Curve Group</label>
           <div class="relative text-gray-600 mb-4">
             <input type="search" id="curveSearch" placeholder="Search"
@@ -63,11 +70,12 @@
 
           <button onclick="addCurveToSubset()" class="mt-2 w-full green-button">Add Curve</button>
 
+
+
           <!-- Selected Curves -->
           <div class="mt-4">
             <h3 class="quote-heading">Selected Curves: </h3>
             <h3 id="selectedCurveList" class="quote-heading"></h3>
-
             <div class="flex gap-2 mt-4 mb-2">
               <button onclick="getQuotesData()" class="flex-1 w-auto green-button text-gray-700 text-sm py-2 rounded">
                 Get Quotes Data
@@ -144,6 +152,7 @@
   </div>
 
   <script>
+
     // Get last modified time of the PAVE.exe file used by the website
     window.addEventListener("DOMContentLoaded", () => {
       fetch('/api/scenario-generation/PAVE-modified-time')
@@ -173,15 +182,63 @@
 
     let currentShockBy = 'type'; // selected shock method (curve type, curve name, all)
     let scenarioSaved = false;
-    const curveSelect = document.getElementById('curveNameSelect'); // shock by curve name - user's selected curve
     const selectedCurvesDiv = document.getElementById('selectedCurves'); // div where selected curves are displayed
     const curveContent = document.getElementById('curveContent'); // right side page (displays scenario generation form)
+    const curveSubsetSelect = document.getElementById('curveSubsetSelect'); // dropdown menu of curves
     const selectedCurves = new Set(); // tracks selected curves
     let pendingUpdates = []; // stores scenario form edits
     let missingCurves = []; // curves with no quotes data
     let shockByCurveNameSet = new Set(); // selected curves for shock by curve name
 
-    const curveSubsetSelect = document.getElementById('curveSubsetSelect'); // dropdown menu of curves
+
+    // Checks if curve manager finished getting quotes data and copies it once ready
+    async function copyCurveManagerData() {
+      try {
+        const checkInterval = setInterval(async () => {
+          const response = await fetch('/api/scenario-generation/isCurveManagerPopulated');
+          const data = await response.json();
+
+          if (data.populated) {
+            clearInterval(checkInterval);
+
+            // Copy curve manager data to scenario generation file (CDef_ScenarioGroup.txt and CQuotes_ScenarioGroup.txt)
+            const copyResponse = await fetch('/api/scenario-generation/copyCurveManagerData', {
+              method: 'POST',
+            });
+            const copyData = await copyResponse.json();
+            console.log('✅', copyData.message);
+          }
+        }, 100);
+      } catch (error) {
+        console.error('❌ Error during curve manager data check/copy:', error);
+      }
+    }
+
+    let dealsManager = false;
+
+    // Receive discount and projection curves, and valuation date from Deals Manager
+    window.addEventListener('message', async (event) => {
+      if (event.data?.type === 'loadCurves') {
+        dealsManager = true;
+
+        const { curves, valuationDate } = event.data;
+
+        // Add discount and projection curves to selectedCurves set
+        selectedCurves.clear();
+        resetCurveGroup();
+        curves.forEach(curve => selectedCurves.add(curve));
+        populateCurveChecklist(selectedCurves); // populates options for shock by curve name
+
+        document.getElementById('curveDate').value = valuationDate;
+        document.getElementById('valuationDate').style.display = 'none';
+        document.getElementById('selectedCurvesContent').style.display = 'none';
+        document.getElementById('listCurves').textContent = curves.join(', ');
+        document.getElementById('selectedCurvesList').style.display = 'block';
+
+        // Wait for curve manager data and copy it to scenario group
+        await copyCurveManagerData();
+      }
+    });
 
     window.onload = function () {
       resetCurveGroup();
@@ -228,12 +285,6 @@
         checkbox.value = name;
         checkbox.onchange = (event) => {
           const isChecked = event.target.checked;
-
-          if (isChecked && shockByCurveNameSet.size >= 3) {
-            event.target.checked = false;
-            alert('⚠️ Select 3 curves maximum');
-            return;
-          }
 
           if (isChecked) {
             shockByCurveNameSet.add(name);
@@ -388,6 +439,9 @@
       selectedCurvesDiv.style.display = 'none';
       const advancedOptions = document.querySelectorAll('input[name="shockBy"]');
       advancedOptions.forEach(option => option.checked = false);
+
+      console.log("SELECTED CURVES:");
+      console.log(selectedCurves);
 
       // Separate IR and EQ curves
       const IR_Curves = [];
@@ -1197,11 +1251,13 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
         shockByCurveNameSet.clear();
         IRRiskFactors = `3m${curveTypeShock}:6m${curveTypeShock}:1y${curveTypeShock}:2y${curveTypeShock}:3y${curveTypeShock}:5y${curveTypeShock}:7y${curveTypeShock}:10y${curveTypeShock}:20y${curveTypeShock}:30y${curveTypeShock}`;
         renderScenarioForm(curveTypeShock, '', '', '');
-        renderGridPointScenarioForm(curveTypeShock, [{ name: "Curve Type", 
-        tenors: [`3m${curveTypeShock}`, `6m${curveTypeShock}`, `1y${curveTypeShock}`, `2y${curveTypeShock}`,
+        renderGridPointScenarioForm(curveTypeShock, [{
+          name: "Curve Type",
+          tenors: [`3m${curveTypeShock}`, `6m${curveTypeShock}`, `1y${curveTypeShock}`, `2y${curveTypeShock}`,
           `3y${curveTypeShock}`, `5y${curveTypeShock}`, `7y${curveTypeShock}`, `10y${curveTypeShock}`,
           `20y${curveTypeShock}`, `30y${curveTypeShock}`
-        ] }]);
+          ]
+        }]);
       } else if (currentShockBy === 'ALL') {
         shockByCurveNameSet.clear();
       } else {
@@ -1257,7 +1313,7 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
           <span style="font-weight: 500;">Greek:</span>
           <span>Off</span>
           <label class="toggle-switch" style="display: flex; align-items: center;">
-            <input type="checkbox" id="scenarioGreekToggle">
+            <input type="checkbox" id="scenarioGreekToggle" ${dealsManager ? 'checked' : ''}>
             <span class="slider"></span>
           </label>
           <span>On</span>
@@ -1567,12 +1623,16 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
       message.style.marginTop = '10px';
       message.style.fontSize = "0.9em";
       message.innerText = '(Click save before running)';
+
       gridForm.appendChild(message);
 
       // Append buttons to container
       buttonRow.appendChild(addBtn);
       buttonRow.appendChild(saveBtn);
-      buttonRow.appendChild(runBtn);
+
+      if (!dealsManager) {
+        buttonRow.appendChild(runBtn);
+      }
       buttonRow.appendChild(message);
 
       // Append buttons to the grid form

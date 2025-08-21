@@ -69,7 +69,7 @@ function extractCurveBlock(text, curveName) {
 function defBlock(curveName) {
     const blocks = [];
     const cdsNames = new Set([
-        'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+        'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 
         'Surv_Honda_SNRFOR_CR14_100bp.JPY',
         'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
         'Surv_Islam_SNRFOR_CR14_100bp.USD'
@@ -116,7 +116,7 @@ function findParentIndices(curveName) {
     // CDS: map Surv curves to corresponding Surv_Generic definitions for USD andJPY
     // Parent Curves: Surv_Generic.USD --> SOFR.ASIA.USD, Surv_Generic.JPY --> TONAR.ASIA.JPY
     const cdsNames = new Set([
-        'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+        'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 
         'Surv_Honda_SNRFOR_CR14_100bp.JPY',
         'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
         'Surv_Islam_SNRFOR_CR14_100bp.USD'
@@ -136,11 +136,11 @@ function findParentIndices(curveName) {
     for (const filePath of filePaths) {
         if (!fs.existsSync(filePath)) continue;
         const content = fs.readFileSync(filePath, 'utf8');
-        const blocks = content.split('#BeginCurve');
+        const blocks = content.match(/#BeginCurve[\s\S]*?#EndCurve[^\n]*/g);
         for (const block of blocks) {
             const curveMatch = block.match(/CurveName\s+(\S+)/);
             if (curveMatch && curveMatch[1] === curveName) {
-                const parentMatch = block.match(/ParentIndices\s+(\S+)/);
+                const parentMatch = block.match(/ParentIndices\s+([^\n\r]*)/);
                 if (parentMatch) {
                     return parentMatch[1].split(':').filter(name => name !== curveName);
                 } else {
@@ -179,6 +179,7 @@ router.post('/generate-quotes', async (req, res) => {
         const curveNamesPath = path.join(__dirname, '..', 'curve_manager', 'CurveNames_CurveManager.txt');
         args.push('-curveNames', curveNamesPath);
 
+        // Write output to CQuotes_CurveManager.txt
         const quotePath = path.join(__dirname, '..', 'curve_manager', 'CQuotes_CurveManager.txt');
         args.push('-curveQuoteFile', quotePath);
 
@@ -247,7 +248,7 @@ router.get('/definition/:curveName', (req, res) => {
     try {
         let { curveName } = req.params;
         const cdsNames = new Set([
-            'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+            'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 
             'Surv_Honda_SNRFOR_CR14_100bp.JPY',
             'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
             'Surv_Islam_SNRFOR_CR14_100bp.USD'
@@ -388,7 +389,6 @@ function updateQuoteInFile(filePath, curveName, rowIndex, field, newValue) {
     fs.writeFileSync(filePath, updatedLines.join('\n'), 'utf8');
 }
 
-
 // Update quotes value changes (Rate, Spread) for curve in CQuotes_CurveManager.txt
 router.post('/quotes/:curveName', (req, res) => {
     const { rowIndex, field, newValue } = req.body;
@@ -436,7 +436,7 @@ router.get('/download/curveManagerDef', (req, res) => {
 
 
 // Download Curve Manager PAVE output
-router.get('/download/curveManager', (req, res) => {
+router.get('/download/curveManagerOutput', (req, res) => {
     const filePath = path.join(__dirname, '..', 'curve_manager', 'curve_DF.txt');
     if (fs.existsSync(filePath)) {
         res.download(filePath, 'curve_DF.txt');
@@ -460,7 +460,7 @@ router.get('/download/debug', (req, res) => {
 router.post('/generate-selected-curves-def', (req, res) => {
 
     const cdsNames = new Set([
-        'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 'Surv_SumitoRealty_SNRFOR_CR14_10',
+        'Surv_ORIXC_SNRFOR_CR14_100bp.JPY', 'Surv_Panas_SNRFOR_CR14_100bp.JPY', 
         'Surv_Honda_SNRFOR_CR14_100bp.JPY',
         'Surv_SonyG_SNRFOR_CR14_100bp.JPY', 'Surv_Komat_SNRFOR_CR14_100bp.JPY', 'Surv_Japan_SNRFOR_CR14_100bp.USD',
         'Surv_Islam_SNRFOR_CR14_100bp.USD'
@@ -506,7 +506,6 @@ router.post('/generate-selected-curves-def', (req, res) => {
 
     curves.forEach(collectHierarchy);
 
-    // ALM Curves: add selected curves to CQuotes_CurveManager.txt
     const defPath = path.join(__dirname, '..', 'curve_manager', 'CDef_CurveManager.txt');
     fs.writeFileSync(defPath, '', 'utf8');
 
@@ -535,13 +534,14 @@ router.post('/generate-selected-curves-def', (req, res) => {
             }
         }
 
-
+        // Add CDS curve names to CurveNames_CurveManager.txt
         if (matchedCDS.size > 0) {
             const cdsCurveList = path.join(__dirname, '..', 'curve_manager', 'CurveNames_CurveManager.txt');
             const cdsOutput = [...matchedCDS].join('\n') + '\n';
             fs.writeFileSync(cdsCurveList, cdsOutput, 'utf8');
         }
 
+        // Add IRPDF and Data Container curve templates to Templates_CurveManager.txt
         if (matchedIRPDFDataContainer.size > 0) {
             const irpdfOutputPath = path.join(__dirname, '..', 'curve_manager', 'Templates_CurveManager.txt');
             const matchedBlocks = [...matchedIRPDFDataContainer]

@@ -1,0 +1,219 @@
+#FileDescription
+Generated: Python code
+Database: AZWDBPCACSQL05\GWAMSQL16P02.RMDB
+ReportDate: 2025-04-30
+
+
+#BeginCurve
+CurveName	TONAR.ASIA.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-04-30
+RefCurveInstanceDate	2025-04-30
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+ON	1d	0.00477	NULL
+TN	2d	0.00477	NULL
+Swap	1w	0.004775	NULL
+Swap	2w	0.004775	NULL
+Swap	3w	0.0047875	NULL
+Swap	1m	0.0047875	NULL
+Swap	2m	0.00485	NULL
+Swap	3m	0.0049375	NULL
+Swap	4m	0.005075	NULL
+Swap	5m	0.0051875	NULL
+Swap	6m	0.005325	NULL
+Swap	7m	0.0054625	NULL
+Swap	8m	0.00555	NULL
+Swap	9m	0.005625	NULL
+Swap	10m	0.0057125	NULL
+Swap	11m	0.0058	NULL
+Swap	1y	0.005875	NULL
+Swap	15m	0.0061125	NULL
+Swap	18m	0.0062625	NULL
+Swap	2y	0.0065875	NULL
+Swap	3y	0.00705	NULL
+Swap	4y	0.00745	NULL
+Swap	5y	0.0078625	NULL
+Swap	6y	0.0083	NULL
+Swap	7y	0.0088125	NULL
+Swap	8y	0.00935	NULL
+Swap	9y	0.00995	NULL
+Swap	10y	0.0106	NULL
+Swap	11y	0.011275	NULL
+Swap	12y	0.01195	NULL
+Swap	15y	0.0139125	NULL
+Swap	20y	0.01665	NULL
+Swap	25y	0.018225	NULL
+Swap	30y	0.0191375	NULL
+Swap	35y	0.0196875	NULL
+Swap	40y	0.02	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_SumitoRealty_SNRFOR_CR14_10
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-04-30
+RefCurveInstanceDate	2025-04-30
+RecoveryRate	0.35
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.00055719	NULL
+CDS	1y	0.00076851	NULL
+CDS	2y	0.00145834	NULL
+CDS	3y	0.00216809	NULL
+CDS	4y	0.00301912	NULL
+CDS	5y	0.00390857	NULL
+CDS	7y	0.00485784	NULL
+CDS	10y	0.0054182	NULL
+CDS	15y	0.00691801	NULL
+CDS	20y	0.00721311	NULL
+CDS	30y	0.00759716	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_ORIXC_SNRFOR_CR14_100bp.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-04-30
+RefCurveInstanceDate	2025-04-30
+RecoveryRate	0.35
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.00085775	NULL
+CDS	1y	0.00104416	NULL
+CDS	2y	0.0019047	NULL
+CDS	3y	0.00267486	NULL
+CDS	4y	0.0036367	NULL
+CDS	5y	0.00445715	NULL
+CDS	7y	0.00565207	NULL
+CDS	10y	0.0062822	NULL
+CDS	15y	0.00673536	NULL
+CDS	20y	0.00708409	NULL
+CDS	30y	0.00743037	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_Panas_SNRFOR_CR14_100bp.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-04-30
+RefCurveInstanceDate	2025-04-30
+RecoveryRate	0.35
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.00054356	NULL
+CDS	1y	0.00067932	NULL
+CDS	2y	0.00115664	NULL
+CDS	3y	0.00166611	NULL
+CDS	4y	0.0023834	NULL
+CDS	5y	0.00305628	NULL
+CDS	7y	0.00391204	NULL
+CDS	10y	0.00437989	NULL
+CDS	15y	0.00465053	NULL
+CDS	20y	0.00470628	NULL
+CDS	30y	0.00483217	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_Honda_SNRFOR_CR14_100bp.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-04-30
+RefCurveInstanceDate	2025-04-30
+RecoveryRate	0.35
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.00111365	NULL
+CDS	1y	0.00128003	NULL
+CDS	2y	0.00231934	NULL
+CDS	3y	0.00345594	NULL
+CDS	4y	0.00466776	NULL
+CDS	5y	0.00570574	NULL
+CDS	7y	0.00701105	NULL
+CDS	10y	0.00762393	NULL
+CDS	15y	0.00808459	NULL
+CDS	20y	0.0083109	NULL
+CDS	30y	0.00847969	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_SonyG_SNRFOR_CR14_100bp.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-04-30
+RefCurveInstanceDate	2025-04-30
+RecoveryRate	0.35
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.00052772	NULL
+CDS	1y	0.0007441	NULL
+CDS	2y	0.00136678	NULL
+CDS	3y	0.00168051	NULL
+CDS	4y	0.00229283	NULL
+CDS	5y	0.0025995	NULL
+CDS	7y	0.003207	NULL
+CDS	10y	0.00360685	NULL
+CDS	15y	0.00352297	NULL
+CDS	20y	0.00352855	NULL
+CDS	30y	0.00353626	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	Surv_Komat_SNRFOR_CR14_100bp.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-04-30
+RefCurveInstanceDate	2025-04-30
+RecoveryRate	0.35
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+CDS	6m	0.00029624	NULL
+CDS	1y	0.00048082	NULL
+CDS	2y	0.00093457	NULL
+CDS	3y	0.00149619	NULL
+CDS	4y	0.00195892	NULL
+CDS	5y	0.00249343	NULL
+CDS	7y	0.00335394	NULL
+CDS	10y	0.00370562	NULL
+CDS	15y	0.00380493	NULL
+CDS	20y	0.00390371	NULL
+CDS	30y	0.00399977	NULL
+
+#EndCurve
+

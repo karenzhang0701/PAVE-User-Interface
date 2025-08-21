@@ -5343,3 +5343,40 @@ Forward	8y	0
 Forward	9y	0
 
 #EndCurve
+
+#BeginCurve  Surv_SumitoRealty_SNRFOR_CR14_10
+CurveName	Surv_SumitoRealty_SNRFOR_CR14_10
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices   Surv_SumitoRealty_SNRFOR_CR14_10:TONAR.ASIA.JPY
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	TKB
+LegType	Premium:Protection
+BootstrappingDiscountCurve	TONAR.ASIA.JPY:TONAR.ASIA.JPY
+LegId	input:0
+Notional	1000000.00:1000000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays	90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	6m
+CDS	1y
+CDS	2y
+CDS	3y
+CDS	4y
+CDS	5y
+CDS	7y
+CDS	10y
+CDS	15y
+CDS	20y
+CDS	30y
+
+#EndCurve	Surv_SumitoRealty_SNRFOR_CR14_10

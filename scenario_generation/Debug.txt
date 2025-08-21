@@ -1,5 +1,5 @@
-DebugInfo started at Thu Jul 31 15:19:29 2025
-DebugInfo printed at Thu Jul 31 15:19:29 2025
+DebugInfo started at Wed Aug 20 15:06:34 2025
+DebugInfo printed at Wed Aug 20 15:06:35 2025
 
 INFO: Bootstrapping module starts ...
 Input Path = 	.\
@@ -8,12 +8,11 @@ Executable = 	..\Dll_Exe_file\PAVE.exe
 Start building curve data ...
 Setting up curve data complete!
 
-DebugInfo printed at Thu Jul 31 15:19:29 2025
+DebugInfo printed at Wed Aug 20 15:06:35 2025
 
 Start building scenario curves ...
 INFO: ScenarioGenerator: Grid-BaseCase
-INFO: ScenarioGenerator: Grid-Down100
 INFO: ScenarioGenerator: Grid-Up100
-INFO: ScenarioGenerator used 27 ms
+INFO: ScenarioGenerator used 580 ms
 Setting Scenario curves complete!
 

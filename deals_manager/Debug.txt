@@ -1,0 +1,33 @@
+DebugInfo started at Wed Aug 20 15:58:56 2025
+DebugInfo printed at Wed Aug 20 15:58:56 2025
+
+INFO: Bootstrapping module starts ...
+Input Path = 	.\
+Executable = 	C:\Users\zhankar\Website\deals_manager\PAVE.exe
+
+Start building curve data ...
+	Alert! SURV_SUMITOREALTY_SNRFOR_CR is(are) bootstrapped by using the default metadata info.
+Setting up curve data complete!
+
+DebugInfo printed at Wed Aug 20 15:58:57 2025
+
+INFO: CDS module starts ...
+Input Path = 	.\
+Executable = 	C:\Users\zhankar\Website\deals_manager\PAVE.exe
+Input File = 	.\_CDSDeal_.txt
+Start processing command line switches...
+	Output File = 	CDS_PV.txt
+	Cashflow File = 	CDS_Cashflow.txt
+Setting up output file streams...
+	Cashflow output types are not specified. Nothing will be generated.
+Finished processing command line switches...
+
+Start building market data container...
+Start loading other inputs: reset rates, pre-generated cashflows, etc...
+setting up market complete!
+TradingGrid starts
+TradingGrid complete
+Total # of records processed : 42
+
+INFO: Tasks used 86 ms 
+

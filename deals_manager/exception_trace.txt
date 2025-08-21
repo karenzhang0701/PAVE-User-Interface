@@ -1,0 +1,5 @@
+DebugInfo printed at Wed Aug 20 15:58:57 2025
+Input File = 	.\Deals_CDS.txt
+
+INFO: Tasks used 1484 ms 
+

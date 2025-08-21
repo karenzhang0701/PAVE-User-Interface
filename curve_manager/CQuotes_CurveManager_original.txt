@@ -1,0 +1,157 @@
+#FileDescription
+Generated: Python code
+Database: AZWDBPCACSQL05\GWAMSQL16P02.RMDB
+ReportDate: 2025-03-31
+
+
+#BeginCurve
+CurveName	FX_JPY.USD
+
+///:Parameter
+Name	Value
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+CurveCategory	FXCurve
+CurveType	FXForward
+Calendar	TKB+NYB
+Interpolation	Log-Linear
+BaseCurrency	JPY
+BoughtCurrency	USD
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate
+------	------	------
+Spot	1d	149.72291
+Spot	2d	149.95147
+Spot	Spot	149.935
+Forward	S/N	149.91856
+Forward	1w	149.81955
+Forward	2w	149.70255
+Forward	3w	149.5853
+Forward	1m	149.4302
+Forward	2m	148.9131
+Forward	3m	148.424
+Forward	4m	147.9133
+Forward	5m	147.48435
+Forward	6m	147.046
+Forward	9m	145.71925
+Forward	1y	144.63295
+Forward	15m	143.5729
+Forward	18m	142.5456
+Forward	2y	140.53955
+Forward	3y	136.58905
+Forward	4y	132.6737
+Forward	5y	128.7958
+Forward	6y	125.01
+Forward	7y	121.47345
+Forward	8y	118.05
+Forward	9y	114.84
+Forward	10y	111.79
+Forward	15y	98.98629138412
+Forward	20y	89.976839944637
+Forward	25y	83.411005397299
+Forward	30y	78.842227471255
+
+#EndCurve
+#BeginCurve
+CurveName	SOFR.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+ON	1d	0.0434	NULL
+TN	2d	0.0434	NULL
+Swap	1w	0.0431434	NULL
+Swap	2w	0.04321	NULL
+Swap	3w	0.04317935	NULL
+Swap	1m	0.04319325	NULL
+Swap	2m	0.043077	NULL
+Swap	3m	0.0428724	NULL
+Swap	4m	0.042529	NULL
+Swap	5m	0.04215875	NULL
+Swap	6m	0.04180285	NULL
+Swap	7m	0.0414	NULL
+Swap	8m	0.0410375	NULL
+Swap	9m	0.04066025	NULL
+Swap	10m	0.040321	NULL
+Swap	11m	0.04002335	NULL
+Swap	1y	0.03973595	NULL
+Swap	18m	0.03799025	NULL
+Swap	2y	0.03719695	NULL
+Swap	3y	0.036467	NULL
+Swap	4y	0.036364	NULL
+Swap	5y	0.036475	NULL
+Swap	6y	0.03669	NULL
+Swap	7y	0.0369275	NULL
+Swap	8y	0.03715875	NULL
+Swap	9y	0.03739175	NULL
+Swap	10y	0.037631	NULL
+Swap	12y	0.038112	NULL
+Swap	15y	0.038678	NULL
+Swap	20y	0.0389838	NULL
+Swap	25y	0.0385895	NULL
+Swap	30y	0.03791635	NULL
+Swap	40y	0.036225	NULL
+Swap	50y	0.0345413	NULL
+
+#EndCurve
+
+#BeginCurve
+CurveName	GA_FD.USD
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+
+///:CurveMarketQuotes
+SecType	Tenor	Rate	Spread
+------	------	------	------
+ON	1d	0.0434644	NULL
+TN	2d	0.0434644	NULL
+Swap	1w	NULL	3.839
+Swap	1m	NULL	11.448
+Swap	2m	NULL	18.456
+Swap	3m	NULL	26.161
+Swap	6m	NULL	26.161
+Swap	9m	NULL	26.161
+Swap	1y	NULL	26.161
+Swap	15m	NULL	26.161
+Swap	18m	NULL	26.161
+Swap	2y	NULL	26.161
+Swap	3y	NULL	26.161
+Swap	4y	NULL	26.161
+Swap	5y	NULL	26.161
+Swap	6y	NULL	26.161
+Swap	7y	NULL	26.161
+Swap	8y	NULL	26.161
+Swap	9y	NULL	26.161
+Swap	10y	NULL	26.161
+Swap	12y	NULL	26.161
+Swap	15y	NULL	26.161
+Swap	20y	NULL	26.161
+Swap	25y	NULL	26.161
+Swap	30y	NULL	26.161
+Swap	40y	NULL	26.161
+Swap	50y	NULL	26.161
+
+#EndCurve
+
+#BeginCurve
+CurveName	GA_IRPDF.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	IRPCurve
+CurveDate	2025-03-31
+RefCurveInstanceDate	2025-03-31
+
+#EndCurve
+

@@ -18,6 +18,12 @@
                 <img src="../images/manulife_logo.jpg" alt="Manulife Logo" class="h-10 w-auto mr-4" />
             </a>
             <h1 class="text-2xl font-semibold text-white">PAVE Deals Manager</h1>
+            <p style="font-size: 12px; color: white; margin-left: 30px;">
+                <a href="/userguides/PAVE%20Deals%20Manager%20User%20Guide.pdf" target="_blank"
+                    class="white-button">
+                    User Guide
+                </a>
+            </p>
         </div>
     </div>
 
@@ -25,7 +31,7 @@
         <div class="flex gap-4">
             <!-- Asset ID -->
             <div class="category">
-                <label class="block text-sm font-medium text-gray-700">Asset ID</label>
+                <label class="block text-sm font-medium text-gray-700 font-bold">Asset ID</label>
                 <textarea id="assetIdInput" placeholder="Separate Asset IDs by commas"
                     class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                     rows="3"></textarea>
@@ -33,7 +39,7 @@
 
             <!--Sec Id-->
             <div class="category">
-                <label class="block text-sm font-medium text-gray-700">Sec Id</label>
+                <label class="block text-sm font-medium text-gray-700 font-bold">Sec Id</label>
                 <textarea id="secIdInput" placeholder="Separate Sec IDs by commas"
                     class="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                     rows="3"></textarea>
@@ -41,7 +47,7 @@
 
             <!-- Portfolio -->
             <div class="category">
-                <label class="block text-sm font-medium text-gray-700">Portfolio</label>
+                <label class="block text-sm font-medium text-gray-700 font-bold">Portfolio</label>
                 <div class="relative">
                     <button onclick="toggleDropdown('portfolioDropdown')"
                         class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
@@ -60,7 +66,7 @@
 
             <!-- Currency -->
             <div class="category">
-                <label class="block text-sm font-medium text-gray-700">Currency</label>
+                <label class="block text-sm font-medium text-gray-700 font-bold">Currency</label>
                 <div class="relative">
                     <button onclick="toggleDropdown('currencyDropdown')"
                         class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
@@ -79,7 +85,7 @@
 
             <!-- Instrument -->
             <div class="category">
-                <label class="block text-sm font-medium text-gray-700">Instrument</label>
+                <label class="block text-sm font-medium text-gray-700 font-bold">Instrument</label>
                 <div class="relative">
                     <button onclick="toggleDropdown('instrumentDropdown')"
                         class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
@@ -98,7 +104,7 @@
 
             <!-- Discount Curve -->
             <div class="category">
-                <label class="block text-sm font-medium text-gray-700">Discount Curve</label>
+                <label class="block text-sm font-medium text-gray-700 font-bold">Discount Curve</label>
                 <div class="relative">
                     <button onclick="toggleDropdown('discountCurveDropdown')"
                         class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
@@ -117,7 +123,7 @@
 
             <!-- Projection Curve -->
             <div class="category">
-                <label class="block text-sm font-medium text-gray-700">Projection Curve</label>
+                <label class="block text-sm font-medium text-gray-700 font-bold">Projection Curve</label>
                 <div class="relative">
                     <button onclick="toggleDropdown('projectionCurveDropdown')"
                         class="w-full text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 px-3 py-2 dropdown-button">
@@ -135,44 +141,285 @@
             </div>
         </div>
 
+        <!--Buttons-->
         <div class="gap-4 mt-4 mb-2">
             <button onclick="collectAndSendData()"
-                class="flex-1 w-auto mt-8 green-button text-gray-700 py-2 rounded">Generate Deals</button>
-            <button id="resetCurveGroup" class="gray-button" onclick="clearSelections()">Clear Selections</button>
+                class="flex-1 w-auto mt-8 green-button text-gray-700 py-2 rounded">Load Deals</button>
+            <button id="newDealsBtn" class="flex-1 w-auto mt-8 green-button text-gray-700 py-2 rounded">New
+                Deals</button>
+            <button id="resetCurveGroup" class="gray-button" onclick="clearSelections()">Reset Filters</button>
         </div>
 
-
-        <!-- Status Message -->
-        <div id="statusMessage" style="color: green; display: none; margin-top: 10px;">Generating...</div>
-
-        <hr id="separator" style="display: none; margin-top: 40px;">
-
-        <!-- Dynamic Buttons Container -->
-        <div id="dealButtons" style="margin-top: 40px;"></div>
-
-        <!--Download Deal Files Buttons-->
-        <div id="downloadButtons" style="margin-top: 20px;"></div>
-
-        <!-- Preview Box -->
-        <div id="previewBox" style="margin-top: 20px; margin-bottom: 20px; display: none;">
-            <textarea id="dealPreview" rows="20" cols="100" readonly
-                style="white-space: pre; font-family: monospace; margin-bottom: 20px;"></textarea>
+        <!--Options for user to select instrument type for New Deals-->
+        <div id="instrumentRadioSelection" class="mt-4 hidden">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Select Instrument Type:</label>
+            <div id="instrumentRadioOptions" class="space-y-2"></div>
         </div>
 
+        <!--Loading message for filtering deals-->
+        <div id="statusMessage" style="color: green; display: none; margin-top: 10px;">Loading...</div>
+
+        <!-- Valuation Date Input and Button -->
+        <div id="valuationContent" style="margin-bottom: 20px; margin-top: 40px; display: none;">
+            <input type="text" id="curveDate" placeholder="YYYY-MM-DD"
+                class="w-40 h-8 rounded-md bg-white px-3 py-2 text-sm text-gray-900 shadow-xs ring-2 ring-gray-800 ring-inset hover:bg-gray-50 focus:outline-none" />
+            <button id="valuationButton" class="blue-button">Valuation</button>
+            <div id="quotesDataMsg" style="color: green; display: none; margin-top: 10px;">Getting curve data...
+            </div>
+        </div>
+
+        <!--Displays filtered deals-->
+        <div id="loadDealsContent">
+            <div id="previewBox" style="margin-top: 20px; margin-bottom: 20px; display: none;">
+                <div id="dealPreview" rows="20" cols="100" readonly
+                    style="white-space: pre; font-family: monospace; margin-bottom: 20px;"></div>
+            </div>
+        </div>
+
+        <!--Displays table for user to add new deals-->
+        <div id="newDealsContent" style="display: none; margin-top: 40px;">
+            <div class="flex space-x-2">
+                <button onclick="addNewDealRow()" id="addNewDeal" class="px-3 py-2 green-button"
+                    style="display: none;">Add Deal</button>
+                <button onclick="saveDealsToBackend()" id="saveDeal" class="px-3 py-2 green-button ml-2"
+                    style="display: none;">Save Deals</button>
+            </div>
+            <div id="newDealsTable" style="margin-top: 20px; margin-bottom: 20px;"></div>
+        </div>
+
+        <!--Curve manager and scenario generation apges-->
+        <div id="pricingDealContent" style="display: none; margin-top: 60px;">
+            <h3 class="quote-heading">1. Edit Curve Data</h3>
+            <iframe id="curveManagerFrame" src="../curvemanager/index.html" width="100%" height="600px"
+                style="border: 2px solid lightgray; margin-top: 30px; margin-bottom: 30px;"></iframe>
+
+            <h3 class="quote-heading" onclick="showScenarioGeneration()"
+                style="cursor: pointer; margin-bottom: 30px; display: flex; align-items: center;">
+                <span>2. Define Scenarios</span>
+                <span id="toggleArrow" style="margin-left: 5px;">▼</span>
+            </h3>
+
+            <iframe id="scenarioGenerationFrame" src="../scenariogeneration/index.html" width="100%" height="600px"
+                style="border: 2px solid lightgray; margin-top: 30px; margin-bottom: 30px; display: none;">
+            </iframe>
+
+            <!--Run PAVE for valuation-->
+            <div class="flex gap-2">
+                <h3 class="quote-heading">3. </h3>
+                <button id="runValuationBtn" class="green-button">Run Valuation</button>
+            </div>
+            <div id="runningMsg" style="color: green; display: none; margin-top: 10px;">Running...</div>
+
+            <!--Display output file-->
+            <div id="outputContent" style="margin-top: 30px;"></div>
+        </div>
     </div>
 
     <script>
+        // Reset selected filters when page is refreshed
         window.onload = clearSelections;
 
+        // Show scenario generation page if user clicks toggle arrow
+        function showScenarioGeneration() {
+            const iframe = document.getElementById("scenarioGenerationFrame");
+            const arrow = document.getElementById("toggleArrow");
+
+            if (iframe.style.display === "none") {
+                iframe.style.display = "block";
+                arrow.textContent = "▲";
+            } else {
+                iframe.style.display = "none";
+                arrow.textContent = "▼";
+            }
+        }
+
+        // When user clicks valuation button
+        document.getElementById('valuationButton').addEventListener('click', async () => {
+            const valuationDate = document.getElementById('curveDate').value;
+            document.getElementById('outputContent').innerHTML = '';
+
+            if (!valuationDate) {
+                alert('Please enter a valuation date.');
+                return;
+            }
+            document.getElementById('quotesDataMsg').style.display = 'block';
+
+            try {
+                // Fetch discount and projection curves in user's selected deals
+                const response = await fetch('/api/deals-manager/discount-projection-curves');
+                const data = await response.json();
+                const curves = data.curves;
+
+                const curveManagerIFrame = document.getElementById('curveManagerFrame');
+                const scenarioGenIFrame = document.getElementById('scenarioGenerationFrame');
+
+                // Send curves and valuation date to Curve Manager
+                curveManagerIFrame.contentWindow.postMessage({
+                    type: 'loadCurves',
+                    curves,
+                    valuationDate
+                }, '*');
+
+                // Send curves and valuation date to Scenario Generation
+                scenarioGenIFrame.contentWindow.postMessage({
+                    type: 'loadCurves',
+                    curves,
+                    valuationDate
+                }, '*');
+            } catch (error) {
+                console.error('❌ Failed to fetch curves:', error);
+                alert('Failed to load curves. Please try again.');
+            }
+        });
+
+        // Getting quotes data is complete (message received from curve manager page)
+        window.addEventListener('message', (event) => {
+            if (event.data?.type === 'valuationComplete') {
+                // Show curve manager and scenario generation pages
+                document.getElementById('quotesDataMsg').style.display = 'none';
+                document.getElementById('pricingDealContent').style.display = 'block';
+                document.getElementById('pricingDealContent')?.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // When user clicks Run Valuation button
+        document.getElementById('runValuationBtn').addEventListener('click', async () => {
+            const curveManagerIFrame = document.getElementById('curveManagerFrame');
+            const valuationDate = document.getElementById('curveDate').value;
+
+            document.getElementById('runningMsg').style.display = 'block';
+            document.getElementById('outputContent').innerHTML = '';
+
+            try {
+                // Run Deals Manager PAVE
+                const dealsRes = await fetch('/api/deals-manager/run-pave', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ valuationDate })
+                });
+                const data = await dealsRes.json();
+                console.log('✅ Deals Manager PAVE executed:', data);
+
+                document.getElementById('runningMsg').style.display = 'none';
+
+                // Generate table view for output file (CDS_PV.txt or CDS_Greeks.txt)
+                const dealsResult = await fetch(`/api/deals-manager/preview-output`);
+                const dealsResultTable = await dealsResult.text();
+
+                const outputDiv = document.getElementById('outputContent');
+                outputDiv.innerHTML = `
+            <div class="flex gap-2 mb-4">
+                <a href="/api/deals-manager/download/output" download>
+                    <button class="blue-button mt-2 mb-2">Download Output</button>
+                </a>
+                <a href="/api/deals-manager/download/deals" download>
+                    <button class="blue-button mt-2 mb-2">Download Deals</button>
+                </a>
+                <a href="/api/curve-manager/download/curveManagerDef" download>
+                    <button class="blue-button mt-2 mb-2">Download Definitions</button>
+                </a>
+                <a href="/api/curve-manager/download/curveManagerQuotes" download>
+                    <button class="blue-button mt-2 mb-2">Download Quotes</button>
+                </a>
+                <a href="/api/scenario-generation/download/scenarioDefinition" download>
+                    <button class="blue-button mt-2 mb-2">Download Scenario Definition</button>
+                </a>
+            </div>
+
+            <div class="mt-4">
+    <div class="mb-6">
+        ${dealsResultTable}
+    </div>
+
+    <div class="flex gap-6">
+        <div class="flex-1">
+            <h3 class="mb-2 font-bold">Debug.txt</h3>
+            <pre class="bg-gray-100 p-2">${data.debug}</pre>
+        </div>
+        <div class="flex-1">
+            <h3 class="mb-2 font-bold">exception_trace.txt</h3>
+            <pre class="bg-gray-100 p-2">${data.exception_trace}</pre>
+        </div>
+    </div>
+</div>
+        `;
+
+                outputDiv?.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (err) {
+                console.error('❌ Error running PAVE:', err);
+                alert('Failed to run valuation.');
+                document.getElementById('runningMsg').style.display = 'none';
+            }
+        });
+
+        // When user clicks new deals button, hide curve manager and scenario generation pages, and load deals content
+        document.getElementById('newDealsBtn').addEventListener('click', () => {
+            document.getElementById('instrumentRadioSelection').style.display = 'block';
+            document.getElementById('newDealsContent').style.display = 'block';
+            document.getElementById('loadDealsContent').style.display = 'none';
+            document.getElementById('pricingDealContent').style.display = 'none';
+            document.getElementById("valuationContent").style.display = 'none';
+            document.getElementById("curveDate").value = "";
+        });
+
+        // User selects instrument type for New Deals
+        document.getElementById('instrumentRadioOptions').addEventListener('input', () => {
+            const instrumentType = document.querySelector('#instrumentRadioOptions input[type="radio"]:checked')?.value;
+            console.log('Selected instrument:', instrumentType);
+
+            // Display table format for user to add new deals
+            // Includes 2 sample deals for reference
+            fetch(`/api/deals-manager/instrument-preview/${encodeURIComponent(instrumentType)}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('newDealsContent').style.display = 'block';
+                    document.getElementById('newDealsTable').innerHTML = html;
+
+                    const msg = document.createElement('p');
+                    msg.textContent = '*2 sample deals are displayed for reference.';
+                    msg.className = 'mt-2 text-sm text-red-500';
+                    document.getElementById('newDealsTable').appendChild(msg);
+
+                    document.getElementById('loadDealsContent').style.display = 'none';
+
+                    // Show add and save new deal buttons
+                    document.getElementById('addNewDeal').style.display = 'block';
+                    document.getElementById('saveDeal').style.display = 'block';
+                    document.getElementById("valuationContent").style.display = 'block';
+                })
+                .catch(err => {
+                    console.error('Error loading preview:', err);
+                    alert('Failed to load preview.');
+                });
+        });
+
+        // Get list of filter options from Excel file
         fetch('/api/deals-manager/filters')
             .then(res => res.json())
             .then(data => {
-                console.log(data);
+                // Populate dropdown menus
                 populateDropdown('portfolioDropdown', data.Portfolio);
                 populateDropdown('currencyDropdown', data.Currency);
                 populateDropdown('instrumentDropdown', data.Instrument);
                 populateDropdown('discountCurveDropdown', data.DiscountCurve);
                 populateDropdown('projectionCurveDropdown', data.ProjectionCurve);
+
+                // Populate options for selecting instrument type (for new deals button)
+                const radioContainer = document.getElementById('instrumentRadioOptions');
+                radioContainer.innerHTML = '';
+
+                data.Instrument.forEach(instrument => {
+                    const radioItem = document.createElement('div');
+                    radioItem.innerHTML = `
+    <input type="radio" id="radio-${instrument}" name="instrumentType" value="${instrument}" class="mr-2">
+    <label for="radio-${instrument}">${instrument}</label>
+    `;
+                    radioContainer.appendChild(radioItem);
+                });
+
             });
 
         // Populate dropdowns for each filtering option (portfolio, currency, instrument...)
@@ -182,20 +429,20 @@
                 const listItem = document.createElement('li');
                 listItem.classList.add('flex', 'items-center', 'py-2');
                 listItem.innerHTML = `
-                    <input type="checkbox" id="${optionValue}" value="${optionValue}" class="mr-2">
-                    <label for="${optionValue}">${optionValue}</label>
-                `;
+    <input type="checkbox" id="${optionValue}" value="${optionValue}" class="mr-2">
+    <label for="${optionValue}">${optionValue}</label>
+    `;
                 dropdown.appendChild(listItem);
             });
         }
 
-        // Manage dropdown toggle icon
+        // Manage dropdown toggle for filter options
         function toggleDropdown(id) {
             const dropdown = document.getElementById(id);
             dropdown.classList.toggle('hidden');
         }
 
-        // Display dropdown options based on user's search
+        // Display dropdown options based on search bar for filters
         function filterOptions(dropdownId, searchTerm) {
             const dropdown = document.getElementById(dropdownId);
             const options = dropdown.querySelectorAll('ul li');
@@ -216,18 +463,20 @@
             return regex.test(assetIds);
         }
 
+        // Send user's selected fitlers to backend
         async function collectAndSendData() {
             const status = document.getElementById('statusMessage');
-            const buttonsContainer = document.getElementById('dealButtons');
             const previewBox = document.getElementById('previewBox');
-            const previewArea = document.getElementById('dealPreview');
-            const downloadContainer = document.getElementById('downloadButtons');
-            downloadContainer.innerHTML = '';
+            document.getElementById('loadDealsContent').style.display = 'block';
+            document.getElementById('instrumentRadioSelection').style.display = 'none';
+            document.getElementById('newDealsContent').style.display = 'none';
+            document.getElementById('pricingDealContent').style.display = 'none';
+            document.getElementById("valuationContent").style.display = 'none';
+            document.getElementById("curveDate").value = "";
 
-            // Show "Generating..." message
+            // Show "Loading..." message
             status.style.display = 'block';
-            status.textContent = 'Generating...';
-            buttonsContainer.innerHTML = '';
+            status.textContent = 'Loading...';
             previewBox.style.display = 'none';
 
             // Collect Asset IDs
@@ -239,7 +488,8 @@
             const secIds = secIdInput.value.trim().split(',').map(id => id.trim()).filter(id => id);
 
             // Collect selected filters from dropdowns
-            const categories = ['portfolioDropdown', 'currencyDropdown', 'instrumentDropdown', 'discountCurveDropdown', 'projectionCurveDropdown'];
+            const categories = ['portfolioDropdown', 'currencyDropdown', 'instrumentDropdown', 'discountCurveDropdown',
+                'projectionCurveDropdown'];
             const selectedData = {};
 
             categories.forEach(categoryId => {
@@ -259,6 +509,7 @@
             console.log('Data to send:', dataToSend);
 
             try {
+                // Backend filters deals from Excel file and writes to Deals_CDS.txt (hard coded for now)
                 const response = await fetch('/api/deals-manager/send-selected-data', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -269,6 +520,8 @@
                 console.log('Success:', result.sheets);
 
                 status.style.display = 'none';
+                document.getElementById('newDealsContent').style.display = 'none';
+                document.getElementById('instrumentRadioSelection').style.display = 'none';
 
                 // Show alert if no deals found for user's selected filters
                 if (result.count === 0) {
@@ -276,46 +529,15 @@
                     return;
                 }
 
-                // Display view and download buttons for each deals txt file
                 const sheets = result.sheets || [];
-                sheets.forEach(sheetName => {
-                    const btn = document.createElement('button');
-                    btn.className = 'green-button';
-                    btn.textContent = `View ${sheetName} Deals`;
-                    btn.style.marginRight = '10px';
-                    btn.onclick = async () => {
+                sheets.forEach(async sheetName => {
+                    document.getElementById("valuationContent").style.display = 'block';
 
-                        document.querySelectorAll('.green-button').forEach(b => {
-                            b.style.outline = 'none';
-                            b.style.border = '1px solid #4CAF50';
-                        });
-
-                        btn.style.outline = '2px solid #00FF00';
-                        btn.style.border = '2px solid #00FF00';
-
-                        // Render deals txt in table form
-                        const fileRes = await fetch(`/api/deals-manager/preview-table/Deals_${sheetName}.txt`);
-                        const html = await fileRes.text();
-                        previewBox.innerHTML = html;
-                        previewBox.style.display = 'block';
-                    };
-                    buttonsContainer.appendChild(btn);
-
-                    const downloadBtn = document.createElement('button');
-                    downloadBtn.className = 'blue-button';
-                    downloadBtn.textContent = `Download ${sheetName} Deals`;
-                    downloadBtn.style.marginRight = '10px';
-                    downloadBtn.onclick = () => {
-                        const fileUrl = `/api/deals-manager/download/Deals_${sheetName}.txt`;
-                        const link = document.createElement('a');
-                        link.href = fileUrl;
-                        link.download = `Deals_${sheetName}.txt`;
-                        link.click();
-
-                    }
-                    downloadContainer.appendChild(downloadBtn);
-
-                    document.getElementById('separator').style.display = 'block';
+                    // Display deals txt file in table format
+                    const fileRes = await fetch(`/api/deals-manager/preview-table/Deals_${sheetName}.txt`);
+                    const html = await fileRes.text();
+                    previewBox.innerHTML = html;
+                    previewBox.style.display = 'block';
                 });
 
 
@@ -326,6 +548,7 @@
             }
         }
 
+        // Reset filters
         function clearSelections() {
             // Uncheck all checkboxes
             document.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
@@ -333,27 +556,107 @@
             // Clear Asset ID inputs
             const assetIdInput = document.getElementById('assetIdInput');
             if (assetIdInput) assetIdInput.value = '';
-
-            // Clear deal buttons and preview box
-            const buttonsContainer = document.getElementById('dealButtons');
-            const downloadContainer = document.getElementById('downloadButtons');
-            const previewBox = document.getElementById('previewBox');
-            if (buttonsContainer) buttonsContainer.innerHTML = '';
-            if (downloadContainer) downloadContainer.innerHTML = '';
-            if (previewBox) {
-                previewBox.innerHTML = '';
-                previewBox.style.display = 'none';
-            }
-            document.getElementById('separator').style.display = 'none';
-
-            fetch('/api/deals-manager/clear-files', { method: 'DELETE' })
-                .then(res => res.json())
-                .then(data => {
-                    console.log(data.message);
-                })
-                .catch(err => console.error('Error clearing files:', err));
         }
 
+        // Add new deal
+        // Each new deal requires 2 rows depending on selected instrument type (eg CDS -> ProtectionLeg and PremiumLeg) 
+        function addNewDealRow() {
+            const tableContainer = document.getElementById('newDealsTable');
+            const table = tableContainer.querySelector('table');
+            const tbody = table?.querySelector('tbody');
+
+            if (!tbody) {
+                console.error('No <tbody> found in newDealsTable');
+                return;
+            }
+
+            const headerCells = table.querySelectorAll('thead th');
+            const instrumentType = document.querySelector('#instrumentRadioOptions input[type="radio"]:checked')?.value;
+
+            const secTypeMapping = {
+                'IRS': ['MFixedLeg', 'MFloatLeg'],
+                'CDS-C': ['ProtectionLeg', 'PremiumLeg'],
+                'CS': ['MFloatLeg', 'MFixedLeg'],
+                'CPI': ['MFixedLeg', 'MFloatLeg']
+            };
+
+            const createRow = (secType) => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = Array.from(headerCells).map((cell) => {
+                    const header = cell.textContent.trim();
+                    let value = '';
+
+                    if (header === 'Instrument') value = instrumentType;
+                    if (header === 'SecType') value = secType;
+
+                    if (header === 'Instrument' || header === 'SecType') {
+                        return `
+        <td class="px-3 py-2 border-r border-gray-200">
+            <span class="text-sm">${value}</span>
+        </td>
+        `;
+                    } else {
+                        return `
+        <td class="px-3 py-2 border-r border-gray-200">
+            <input type="text" class="w-full px-2 py-1 border border-gray-300 rounded text-sm" />
+        </td>
+        `;
+                    }
+                }).join('');
+                return newRow;
+            };
+
+            const secTypes = secTypeMapping[instrumentType] || [];
+            secTypes.forEach(secType => {
+                tbody.appendChild(createRow(secType));
+            });
+        }
+
+        // Saves user's created new deals to Deals_CDS.txt
+        function saveDealsToBackend() {
+            const instrumentType = document.querySelector('#instrumentRadioOptions input[type="radio"]:checked')?.value;
+            if (!instrumentType) {
+                alert('Please select an instrument type.');
+                return;
+            }
+
+            const table = document.getElementById('newDealsTable');
+            const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => {
+                const cells = tr.querySelectorAll('td');
+                const row = {};
+
+                headers.forEach((header, i) => {
+                    const cell = cells[i];
+                    const input = cell.querySelector('input');
+                    const span = cell.querySelector('span');
+
+                    if (input) {
+                        row[header] = input.value.trim();
+                    } else if (span) {
+                        row[header] = span.textContent.trim();
+                    } else {
+                        row[header] = '';
+                    }
+                });
+
+                return row;
+            }).filter(row => {
+                return Object.values(row).some(value => value !== '');
+            });
+
+            fetch('/api/deals-manager/save-new-deals', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ headers, rows })
+            })
+                .then(res => res.json())
+                .then(data => alert(data.message))
+                .catch(err => {
+                    console.error('❌ Failed to save deals:', err);
+                    alert('Failed to save deals.');
+                });
+        }
     </script>
 </body>
 

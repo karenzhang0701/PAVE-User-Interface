@@ -1,0 +1,10 @@
+Error in parsing command line or reading data from files.
+
+Error in parsing command line or reading data from files.
+
+Error in parsing command line or reading data from files.
+
+ERROR! ENSURE unmet: Empty file -.\../scenario_generation/scenario_definition.txt
+
+ERROR! FAILURE: ERROR in CurveMgr::CurveMetadataFileInput - FAILURE: Empty file - .\../curve_manager/CDef_CurveManager.txt
+

@@ -181,7 +181,6 @@ function defBlock(curveName) {
       blocks.push({ name: curveName, block });
     }
   }
-  console.log(blocks);
   return blocks;
 }
 
@@ -595,7 +594,6 @@ router.post('/tenors', (req, res) => {
     let tenors = [];
 
     const curveType = dataContainerNames.has(curveName) ? 'EQ' : 'IR';
-    console.log(shock === 'ALL');
 
     if (shock === 'ALL') {
       if (curveCategory === 'BondSpotCurve' || curveCategory === 'SpotPriceCurve') {
@@ -811,11 +809,6 @@ router.post('/generate-selected-curves-def', (req, res) => {
   const defPath = path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt');
   fs.writeFileSync(defPath, '', 'utf8');
 
-
-  console.log(allCurves);
-  console.log(matchedCDS);
-  console.log(matchedIRPDFDataContainer);
-
   try {
     if (allCurves.size > 0) {
       const existingDefs = fs.readFileSync(defPath, 'utf8');
@@ -841,13 +834,14 @@ router.post('/generate-selected-curves-def', (req, res) => {
       }
     }
 
-
+    // Add CDS curve names to CurveNames_ScenarioGroup.txt
     if (matchedCDS.size > 0) {
       const cdsCurveList = path.join(__dirname, '..', 'scenario_generation', 'CurveNames_ScenarioGroup.txt');
       const cdsOutput = [...matchedCDS].join('\n') + '\n';
       fs.writeFileSync(cdsCurveList, cdsOutput, 'utf8');
     }
 
+    // Add IRPDF and Data Container curve templates to Templates_ScenarioGroup.txt
     if (matchedIRPDFDataContainer.size > 0) {
       const irpdfOutputPath = path.join(__dirname, '..', 'scenario_generation', 'Templates_ScenarioGroup.txt');
       const matchedBlocks = [...matchedIRPDFDataContainer]
@@ -896,7 +890,7 @@ router.post('/save-scenario-def', (req, res) => {
     content += `IRRiskFactors\t${scenario.IRRiskFactors}\n`;
   }
 
-  if (scenario.IRShockType === 'Spread') content += `${prefix}ShockType\tSpread\n`;
+  if (scenario.IRShockType === 'Spread') content += `IRShockType\tSpread\n`;
 
   if (scenario.containsDC === 'some') {
     content += `IRShockAmt\t0.001\n`;
@@ -1097,7 +1091,7 @@ router.get('/download/debug', (req, res) => {
   }
 })
 
-// Clear CDef_ScenarioGroup.txt and CQuotes_ScenarioGroup.txt for resetting curve group
+// Clear files for resetting curve group
 router.post('/clear-curve-files', (req, res) => {
   try {
     defFile = path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt');
@@ -1105,17 +1099,64 @@ router.post('/clear-curve-files', (req, res) => {
     originalQuotesFile = path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup_original.txt');
     curveNames = path.join(__dirname, '..', 'scenario_generation', 'CurveNames_ScenarioGroup.txt');
     template = path.join(__dirname, '..', 'scenario_generation', 'Templates_ScenarioGroup.txt');
+    scenDef = path.join(__dirname, '..', 'scenario_generation', 'scenario_definition.txt');
 
     fs.writeFileSync(defFile, '');
     fs.writeFileSync(quotesFile, '');
     fs.writeFileSync(originalQuotesFile, '');
     fs.writeFileSync(curveNames, '');
     fs.writeFileSync(template, '');
+    fs.writeFileSync(scenDef, '');
     res.json({ status: 'success', message: 'Curve group reset successfully.' });
   } catch (err) {
     console.error('Error clearing files:', err);
     res.status(500).json({ status: 'error', message: err.message });
   }
 });
+
+// Copy Curve Manager Data to Scenario Group
+router.post('/copyCurveManagerData', (req, res) => {
+  const filesToCopy = [
+    {
+      source: path.join(__dirname, '..', 'curve_manager', 'CQuotes_CurveManager.txt'),
+      destination: path.join(__dirname, '..', 'scenario_generation', 'CQuotes_ScenarioGroup.txt')
+    },
+    {
+      source: path.join(__dirname, '..', 'curve_manager', 'CDef_CurveManager.txt'),
+      destination: path.join(__dirname, '..', 'scenario_generation', 'CDef_ScenarioGroup.txt')
+    }
+  ];
+
+  for (const { source, destination } of filesToCopy) {
+    if (!fs.existsSync(source)) {
+      return res.status(404).json({ error: `Source file not found: ${path.basename(source)}` });
+    }
+
+    try {
+      fs.copyFileSync(source, destination);
+    } catch (err) {
+      console.error(`Error copying ${path.basename(source)}:`, err);
+      return res.status(500).json({ error: `Failed to copy ${path.basename(source)}` });
+    }
+  }
+
+  res.status(200).json({ message: 'All files copied successfully' });
+});
+
+// Checks if quotes have been written to CQuotes_CurveManager.txt
+router.get('/isCurveManagerPopulated', (req, res) => {
+  const filePath = path.join(__dirname, '..', 'curve_manager', 'CQuotes_CurveManager.txt');
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading file:', err);
+      return res.status(500).json({ populated: false, error: 'File read error' });
+    }
+
+    const containsBeginCurve = data.includes('#BeginCurve');
+    res.status(200).json({ populated: containsBeginCurve });
+  });
+});
+
 
 module.exports = router;

@@ -39,7 +39,7 @@
     <div class="ml-6 mr-8">
       <div class="space-y-6">
         <!-- Input Date -->
-        <div>
+        <div id="valuationDate">
           <label class="quote-heading">Valuation Date</label>
           <div class="flex gap-2">
             <input type="text" id="curveDate" placeholder="YYYY-MM-DD"
@@ -47,10 +47,10 @@
           </div>
         </div>
 
-        <button onclick="runAllCurves()" class="flex-1 green-button">Run All Curves</button>
+        <button onclick="runAllCurves()" id="runAll" class="flex-1 green-button">Run All Curves</button>
 
         <!-- Curve Search -->
-        <div class="mb-6">
+        <div class="mb-6" id="curveSearcher">
           <label class="quote-heading">Select Curve Group</label>
           <div class="relative text-gray-600 mb-4">
             <input type="search" id="curveSearch" placeholder="Search"
@@ -74,22 +74,26 @@
 
         <!-- Selected Curves -->
         <div>
-          <h3 class="quote-heading">Selected Curves: </h3>
-          <div id="selectedCurveList" class="quote-heading space-y-2 mt-4 mb-4"></div>
 
-          <div class="flex gap-2 mt-4 mb-2">
-            <button onclick="getQuotesData()" class="flex-1 w-auto green-button text-gray-700 text-sm py-2 rounded">
-              Get Quotes Data
-            </button>
-            <button id="resetCurveGroup" class="gray-button" onclick="resetCurveGroup()">Clear Curves</button>
+          <div id="selectCurveContent">
+            <h3 class="quote-heading">Selected Curves: </h3>
+            <div id="selectedCurveList" class="quote-heading space-y-2 mt-4 mb-4"></div>
+
+            <div class="flex gap-2 mt-4 mb-2">
+              <button onclick="getQuotesData()" class="flex-1 w-auto green-button text-gray-700 text-sm py-2 rounded">
+                Get Quotes Data
+              </button>
+              <button id="resetCurveGroup" class="gray-button" onclick="resetCurveGroup()">Clear Curves</button>
+            </div>
+            <div id="loadingMessage" class="text-green-600 text-sm mt-1 hidden">Getting data...</div>
           </div>
-          <div id="loadingMessage" class="text-green-600 text-sm mt-1 hidden">Getting data...</div>
 
           <!--Displays user's selected curves for viewing definition and editing quotes-->
           <div id="selectedCurves" class="space-y-2 mt-4"></div>
 
           <div class="mb-4">
-            <button onclick="runSelectedCurves()" class="green-button mb-1" style="min-width: 242px;">Run Selected
+            <button onclick="runSelectedCurves()" id="runCurves" class="green-button mb-1" style="min-width: 242px;">Run
+              Selected
               Curves</button>
             <div id="runningMessage" class="text-green-600 text-sm mt-1 hidden">Running PAVE...</div>
           </div>
@@ -110,6 +114,39 @@
       resetCurveGroup();
     };
 
+    // Receive discount and projection curves and valuation date from Deals Manager
+    window.addEventListener('message', (event) => {
+      if (event.data?.type === 'loadCurves') {
+        const { curves, valuationDate } = event.data;
+        console.log('📩 Received curves from parent:', curves, 'with date:', valuationDate);
+
+        // Add definitions to CDef_CurveManager.txt
+        fetch('/api/curve-manager/generate-selected-curves-def', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ curves })
+        })
+          .then(res => res.json())
+          .then(data => {
+            console.log('✅ Quotes loaded:', data.message);
+
+            // Hide curve selection UI elements when embedded in the deals manager,
+            // because the required curves are already provided automatically.
+            document.getElementById('curveSearcher').style.display = 'none';
+            document.getElementById('runAll').style.display = 'none';
+            document.getElementById('selectCurveContent').style.display = 'none';
+            document.getElementById('runCurves').style.display = 'none';
+            document.getElementById('valuationDate').style.display = 'none';
+
+            // Set valuation date and get quotes data
+            document.getElementById('curveDate').value = valuationDate;
+            getQuotesData();
+          })
+          .catch(err => {
+            console.error('❌ Failed to load quotes:', err);
+          });
+      }
+    });
 
     // Get the last modified time of the PAVE.exe file used by the website
     window.addEventListener("DOMContentLoaded", () => {
@@ -262,8 +299,11 @@
         paveResults.forEach(result => {
           curveContent.innerHTML += `
   <div class="flex gap-2 mb-4">
-    <a href="/api/curve-manager/download/curveManager" download>
+    <a href="/api/curve-manager/download/curveManagerOutput" download>
       <button class="blue-button mt-2 mb-2">Download Output</button>
+    </a>
+    <a href="/api/curve-manager/download/curveManagerDef" download>
+      <button class="blue-button mt-2 mb-2">Download Definitions</button>
     </a>
     <a href="/api/curve-manager/download/curveManagerQuotes" download>
       <button class="blue-button mt-2 mb-2">Download Quotes</button>
@@ -391,6 +431,9 @@
               });
 
               document.getElementById('selectedCurveList').textContent = curves.join(', ');
+
+              // Notify deals manager that quotes data has been generated
+              window.parent.postMessage({ type: 'valuationComplete' }, '*');
             })
             .catch(err => {
               console.error('❌ Failed to fetch curve list:', err);
@@ -404,6 +447,7 @@
         });
     }
 
+    // Call function to display quotes data table depending on curve type
     function handleEditQuotes(name) {
       if (CPINames.has(name)) {
         viewCPIQuotes(name);
@@ -419,9 +463,9 @@
       const selected = Array.from(curveSelect.selectedOptions).map(opt => opt.value);
       selected.forEach(name => selectedCurves.add(name));
 
-      document.getElementById('selectedCurveList').textContent = Array.from(selectedCurves).join(', ');
-
       const curves = Array.from(selectedCurves);
+
+      document.getElementById('selectedCurveList').textContent = Array.from(selectedCurves).join(', ');
 
       fetch('/api/curve-manager/generate-selected-curves-def', {
         method: 'POST',
@@ -1002,11 +1046,12 @@ ${row.CustomizedSpread?.toUpperCase() !== 'NULL' ? 'contenteditable="true"' : ''
         .then(res => res.json())
         .then(results => {
           document.getElementById('runningMessage').classList.add('hidden');
+
           curveContent.innerHTML = '<h3 class="text-lg font-semibold text-gray-800 mb-2">Output</h3>';
           results.forEach(result => {
             curveContent.innerHTML += `
   <div class="flex gap-2 mb-6">
-    <a href="/api/curve-manager/download/curveManager" download>
+    <a href="/api/curve-manager/download/curveManagerOutput" download>
       <button class="blue-button mt-2 mb-2">Download Output</button>
     </a>
     <a href="/api/curve-manager/download/curveManagerQuotes" download>

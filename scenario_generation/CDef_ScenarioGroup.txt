@@ -1,0 +1,126 @@
+#BeginCurve	TONAR.ASIA.JPY
+CurveName	TONAR.ASIA.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	YieldCurve
+ParentIndices	TONAR.ASIA.JPY
+CrvLevelDaycountCode	Act/365 Fixed
+SettlementDays	2
+Calendar	TKB
+
+
+///:CurveDefinition
+SecType	Tenor	PriorityLevel	LegType	ProjectionCurve	BootstrappingDiscountCurve	LegId	Notional	IndexTenor	DaycountCode	ResetFreqDays	PayFreqDays	CompFreqDays	RollConvention
+-------	-----	-------------	-------	---------------	--------------------------	-----	--------	----------	------------	-------------	-----------	------------	--------------
+ON	1d	Six	Fix	n/a	TONAR.ASIA.JPY	input	1000000	n/a	Act/365 Fixed	n/a	1	n/a	Normal - EOM
+TN	2d	Six	Fix	n/a	TONAR.ASIA.JPY	input	1000000	n/a	Act/365 Fixed	n/a	1	n/a	Normal - EOM
+Swap	1w	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2w	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3w	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	11m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	1y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	15m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	18m	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	2y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	3y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	4y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	5y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	6y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	7y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	8y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	9y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	10y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	11y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	12y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	15y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	20y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	25y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	30y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	35y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+Swap	40y	Eight (lowest)	Fix:Float	n/a:TONAR.ASIA.JPY	TONAR.ASIA.JPY:TONAR.ASIA.JPY	input:0	1000000:1000000	n/a:1	Act/365 Fixed:Act/365 Fixed	n/a:1	360:360	n/a:360	Normal - EOM:Normal - EOM
+
+#EndCurve	TONAR.ASIA.JPY
+#BeginCurve  Surv_Generic.JPY
+CurveName	Surv_Generic.JPY
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices	Surv_Generic.JPY:TONAR.ASIA.JPY
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	TKB
+LegType	Premium:Protection
+BootstrappingDiscountCurve	TONAR.ASIA.JPY:TONAR.ASIA.JPY
+LegId	input:0
+Notional	1000000.00:1000000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays	90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	6m
+CDS	1y
+CDS	2y
+CDS	3y
+CDS	4y
+CDS	5y
+CDS	7y
+CDS	10y
+CDS	15y
+CDS	20y
+CDS	30y
+
+#EndCurve	Surv_Generic.JPY
+#BeginCurve  Surv_SumitoRealty_SNRFOR_CR14_10
+CurveName	Surv_SumitoRealty_SNRFOR_CR14_10
+
+///:Parameter
+Name	Value
+CurveCategory	ZeroCurve
+CurveType	Surv
+ParentIndices   Surv_SumitoRealty_SNRFOR_CR14_10:TONAR.ASIA.JPY
+CrvLevelDaycountCode	Act/360
+SettlementDays	0
+Calendar	TKB
+LegType	Premium:Protection
+BootstrappingDiscountCurve	TONAR.ASIA.JPY:TONAR.ASIA.JPY
+LegId	input:0
+Notional	1000000.00:1000000.00
+DaycountCode	Act/360:Act/360
+PayFreqDays	90:90
+RollConvention	IMM - CDS:IMM - CDS
+EndDateAdjustment	None:None
+
+///:CurveDefinition
+SecType	Tenor
+-------	-----
+CDS	6m
+CDS	1y
+CDS	2y
+CDS	3y
+CDS	4y
+CDS	5y
+CDS	7y
+CDS	10y
+CDS	15y
+CDS	20y
+CDS	30y
+
+#EndCurve	Surv_SumitoRealty_SNRFOR_CR14_10

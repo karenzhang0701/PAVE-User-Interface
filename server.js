@@ -16,7 +16,6 @@ app.use('/api/curve-manager', curveManagerRoutes);
 app.use('/api/scenario-generation', scenarioRoutes);
 app.use('/api/deals-manager', dealManagerRoutes);
 
-// Static file serving
 app.use('/deals_manager', express.static(path.join(__dirname, 'deals_manager')));
 
 app.listen(port, () => {
